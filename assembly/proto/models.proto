@@ -13,3 +13,7 @@ message ProtoTransactionIndex {
     bytes blockHash = 1;
     uint32 idx = 2;
 }
+
+message ProtoCallContractArgs {
+    repeated bytes args = 1;
+}
