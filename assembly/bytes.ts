@@ -1,16 +1,14 @@
 import { debug } from "./debug";
+import {util} from "./utils";
 
 export class Bytes extends Uint8Array {
   static fromBytes(data: Uint8Array): Bytes {
-    //@ts-ignore
+    // @ts-ignore
     return changetype<Bytes>(data);
   }
 
   toHex(): string {
-    return this.reduce(
-      (output, elem) => output + ("0" + (elem & 0xff).toString(16)),
-      ""
-    );
+    return util.toHexString(changetype<Uint8Array>(this), false);
   }
 
   prepend(_elementPrefix: Bytes): Bytes {

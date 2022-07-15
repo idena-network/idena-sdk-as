@@ -86,17 +86,14 @@ export namespace util {
     return array;
   }
 
-  export function encodeToHex(
+  export function toHexString(
     data: Uint8Array,
-    withPrefix: bool = false
+    withPrefix: bool = true
   ): string {
-    let hex = '';
-
-    for (let i = 0; i < data.length; i++) {
-      hex += data[i].toString(16);
-    }
-
-    return withPrefix ? '0x' + hex : hex;
+    return (withPrefix ? '0x' : '') + data.reduce(
+      (output, elem) => output + `0${(elem & 0xff).toString(16)}`.slice(-2),
+      ""
+    );
   }
 
   export function packPlainArgument(data: Bytes): Bytes {

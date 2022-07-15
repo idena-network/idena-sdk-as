@@ -1,4 +1,5 @@
-import { Bytes } from "./bytes";
+import {Bytes} from "./bytes";
+import {util} from "./utils";
 
 export class Address extends Bytes {
   static fromBytes(data: Uint8Array): Address {
@@ -6,11 +7,9 @@ export class Address extends Bytes {
   }
 
   toHex(): string {
-    return this.reduce(
-      (output, elem) => output + ("0" + (elem & 0xff).toString(16)),
-      ""
-    );
+    return util.toHexString(changetype<Uint8Array>(this), false);
   }
+
   toString(): string {
     return this.toHex();
   }
