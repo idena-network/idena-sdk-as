@@ -21,6 +21,7 @@
     "@as-pect/cli": "^6.2.4",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.12.0",
+    "as-bignum": "^0.2.15",
     "as-proto-gen": "^0.2.5",
     "assemblyscript": "^0.20.1",
     "eslint": "^8.9.0",
