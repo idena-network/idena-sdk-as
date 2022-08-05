@@ -1,35 +1,45 @@
 import {Bytes} from "./bytes";
-import {util} from "./utils";
 import {Region} from "./region";
 import {env} from "./env";
 
+export class KeyValue<K, V> {
+  private readonly key: Bytes;
+  private readonly _encodeValue: (value: V) => Bytes;
+  private readonly _decodeValue: (a: Bytes) => V;
 
-export interface Convertable {
-    toBytes(): Bytes;
-}
+  constructor(
+    key: K, 
+    encodeKey: (key: K) => Bytes,
+    encodeValue: (value: V) => Bytes,
+    decodeValue: (bytes: Bytes) => V
+  ) {
+    this.key = encodeKey(key);
+    this._encodeValue = encodeValue;
+    this._decodeValue = decodeValue;
+  }
 
-export class KeyValue<V extends Convertable> {
-    private key: Bytes;
+  private encodeKey(): usize {
+    return changetype<usize>(new Region(this.key));
+  }
 
-    constructor(key: string) {
-        this.key = Bytes.fromBytes(util.stringToBytes(key))
+  set(value: V): void {
+    env.setStorage(this.encodeKey(), changetype<usize>(new Region(this._encodeValue(value))));
+  }
+
+  private static _empty(v: i32): bool {
+    return v == 0;
+  }
+
+  empty(): bool {
+    return KeyValue._empty(env.getStorage(this.encodeKey()));
+  }
+
+  get(defaultValue: V): V {
+    let ptr = env.getStorage(this.encodeKey());
+    if (KeyValue._empty(ptr)) {
+      return defaultValue;
     }
-
-    private _encodeKey(): usize {
-        return changetype<usize>(new Region(this.key));
-    }
-
-    set(value: V): void {
-        env.setStorage(this._encodeKey(), changetype<usize>(new Region(value.toBytes())));
-    }
-
-    get(defaultValue: V | null, create: (a: Bytes) => V): V | null {
-        let ptr = env.getStorage(this._encodeKey());
-        if (ptr == 0) {
-            return defaultValue
-        }
-        let bytes = Bytes.fromBytes(changetype<Region>(ptr).read())
-        let a = create(bytes)
-        return a
-    }
+    let bytes = Bytes.fromBytes(changetype<Region>(ptr).read());
+    return this._decodeValue(bytes);
+  }
 }
