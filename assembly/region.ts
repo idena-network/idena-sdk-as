@@ -1,3 +1,4 @@
+@unmanaged
 export class Region {
   offset: u32
   len: u32

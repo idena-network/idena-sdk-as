@@ -107,4 +107,13 @@ export namespace env {
     @external("env", "balance")
     // Reads balance of addr
     export declare function balance(addr: usize): i32
+
+    @external("env", "code_hash")
+    export declare function codeHash() : i32
+
+    @external("env", "own_code")
+    export declare function code() : i32
+
+    @external("env", "contract_addr_by_hash")
+    export declare function contractAddressByHash(code_hash : usize, args : usize, nonce : usize ) : i32
 }
