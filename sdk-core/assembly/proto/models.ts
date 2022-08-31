@@ -1,4 +1,4 @@
-import { Writer, Reader } from "as-proto/assembly";
+import { Writer, Reader } from "as-proto";
 
 export namespace models {
   export class ProtoStateIdentity {

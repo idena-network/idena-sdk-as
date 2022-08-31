@@ -1,6 +1,6 @@
-import {Bytes} from "./bytes";
-import {Region} from "./region";
-import {env} from "./env";
+import {Bytes} from './bytes';
+import {Region} from './region';
+import {env} from './env';
 
 export class KeyValue<K, V> {
   private readonly key: Bytes;
@@ -8,7 +8,7 @@ export class KeyValue<K, V> {
   private readonly _decodeValue: (a: Bytes) => V;
 
   constructor(
-    key: K, 
+    key: K,
     encodeKey: (key: K) => Bytes,
     encodeValue: (value: V) => Bytes,
     decodeValue: (bytes: Bytes) => V
@@ -23,7 +23,10 @@ export class KeyValue<K, V> {
   }
 
   set(value: V): void {
-    env.setStorage(this.encodeKey(), changetype<usize>(new Region(this._encodeValue(value))));
+    env.setStorage(
+      this.encodeKey(),
+      changetype<usize>(new Region(this._encodeValue(value)))
+    );
   }
 
   private static _empty(v: i32): bool {

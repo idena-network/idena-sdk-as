@@ -1,1 +1,0 @@
-export {u128Safe as u128} from "as-bignum/assembly";

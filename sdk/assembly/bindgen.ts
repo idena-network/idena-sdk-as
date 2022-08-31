@@ -1,0 +1,1 @@
+import "idena-sdk-bindgen";

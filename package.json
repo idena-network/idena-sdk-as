@@ -1,8 +1,7 @@
 {
-  "name": "asi",
+  "name": "idena-sdk-as1",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "test": "asp --verbose",
     "test:ci": "asp --summary",
@@ -12,19 +11,18 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@assemblyscript/loader": "^0.20.1",
-    "as-hex": "^1.0.1",
-    "as-proto": "^0.2.5"
-  },
   "devDependencies": {
     "@as-pect/cli": "^6.2.4",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.12.0",
-    "as-bignum": "^0.2.15",
-    "as-proto-gen": "^0.2.5",
-    "assemblyscript": "^0.20.1",
     "eslint": "^8.9.0",
+    "lerna": "^3.22.1",
     "prettier": "^2.5.1"
-  }
+  },
+  "private": true,
+  "workspaces": [
+    "bindgen",
+    "sdk-core",
+    "sdk"
+  ]
 }

@@ -1,5 +1,5 @@
 import {Bytes} from "./bytes";
-import {Protobuf} from "as-proto/assembly";
+import {Protobuf} from "as-proto";
 import {models} from "./proto/models";
 import {Region} from "./region";
 import {env} from "./env";
@@ -141,7 +141,7 @@ export namespace util {
       return Bytes.fromBytes(region.read());
     }
 
-    export function bytesToPtr(data: Bytes): usize {
+    export function bytesToPtr(data: Uint8Array): usize {
       let r = new Region(data);
       return changetype<usize>(r);
     }
@@ -170,4 +170,18 @@ export namespace util {
     function stripHexPrefix(str: string): string {
       return isHexPrefixed(str) ? str.slice(2) : str;
     }
+
+    export function parseFromBytes<T>(bytes: Uint8Array): T {
+      return decode<T>(bytes);
+    }
+
+    export function allocate<T>(): T {
+      return changetype<T>(__new(offsetof<T>(), idof<T>()));
+    }
+}
+
+// @ts-ignore
+@inline
+export function isPrimitive<T>(): boolean {
+  return isInteger<T>() || isFloat<T>() || isString<T>();
 }

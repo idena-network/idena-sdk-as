@@ -1,0 +1,36 @@
+{
+  "name": "idena-sdk-bindgen",
+  "version": "0.0.6",
+  "description": "Bindings for serializing contract state",
+  "main": "index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "build:asconfig": "node asconfig.js",
+    "pretest": "yarn build && yarn build:asconfig",
+    "test": "node ./test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com:idena-network/idena-sdk-as",
+    "directory": "idena-sdk-bindgen"
+  },
+  "keywords": [
+    "idena",
+    "assemblyscript",
+    "contracts"
+  ],
+  "license": "(MIT AND Apache-2.0)",
+  "files": [
+    "index.js",
+    "compiler.js",
+    "dist/",
+    "assembly/index.ts"
+  ],
+  "devDependencies": {
+    "idena-sdk-core": "0.0.3"
+  },
+  "dependencies": {
+    "idena-sdk-core": "0.0.6"
+  }
+}
