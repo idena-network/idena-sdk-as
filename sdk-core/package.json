@@ -1,6 +1,6 @@
 {
   "name": "idena-sdk-core",
-  "version": "0.0.6",
+  "version": "0.0.13",
   "description": "",
   "types": "assembly/index.ts",
   "scripts": {

@@ -47,6 +47,26 @@ export class Bytes extends Uint8Array {
     return d.getUint8(0);
   }
 
+  toI64(): i64 {
+    let d = new DataView(this.buffer);
+    return d.getInt64(0, true);
+  }
+
+  toI32(): i32 {
+    let d = new DataView(this.buffer);
+    return d.getInt32(0, true);
+  }
+
+  toI16(): i16 {
+    let d = new DataView(this.buffer);
+    return d.getInt16(0, true);
+  }
+
+  toI8(): i8 {
+    let d = new DataView(this.buffer);
+    return d.getInt8(0);
+  }
+
   static fromU64(n: u64): Bytes {
     let bs = new Uint8Array(8);
     let d = new DataView(bs.buffer);

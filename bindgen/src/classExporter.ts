@@ -96,8 +96,8 @@ export class ClassExporter extends ClassDecorator {
     }
     if (isInit) {
       if (!decorators.some((decorator) => decorator.includes("exportAs"))) {
-        decorators.push(`@exportAs("new")`);
-        this.checkMethods("new");
+        decorators.push(`@exportAs("deploy")`);
+        this.checkMethods("deploy");
       } else {
         let decorator = node.decorators!.find(
           (d) => toString(d.name) === "exportAs"

@@ -538,7 +538,7 @@ function readParam<T>(ptr: usize) : T {
   if (isDefined(value.decode)) {
     return decode<T>(data);
   }
-  return decodeBytes(data);
+  return decodeBytes<T>(data);
 }
 
 function ptrToBytes(ptr : usize) : Bytes {
@@ -549,6 +549,7 @@ function ptrToBytes(ptr : usize) : Bytes {
 }
 
 function decodeBytes<T>(buf: Uint8Array): T {
+  var value : T;
   const valType = nameof<T>();
   if (isInteger<T>()) {
       let bytes = Bytes.fromBytes(buf);      
@@ -568,22 +569,40 @@ function decodeBytes<T>(buf: Uint8Array): T {
         // @ts-ignore
         return <T>bytes.toU64();
       }
+      if (valType == "i8") {
+        // @ts-ignore
+        return <T>bytes.toI8();
+      }
+      if (valType == "i16") {
+        // @ts-ignore
+        return <T>bytes.toI16();
+      }
+      if (valType == "i32") {
+        // @ts-ignore
+        return <T>bytes.toI32();
+      }
+      if (valType == "i64") {
+        // @ts-ignore
+        return <T>bytes.toI64();
+      }
   }
-  if (valType == "u128") {
+   // @ts-ignore
+  if (value instanceof u128) {
     // @ts-ignore
     return <T>u128.fromBytes(buf);
   }
-  if (valType == "u256") {
+   // @ts-ignore
+  if (value instanceof u256) {
     // @ts-ignore
     return <T>u256.fromBytes(buf);
   }
-  if (isString<T>() ){
+  if (isString<T>()){
      // @ts-ignore
-     return <T>util.bytesToString(buf);
+     return changetype<T>(util.bytesToString(buf));
   }
   env.panic(util.strToPtr(`unsupported type of parameter ${valType}`));
   // @ts-ignore
-  return <T>0;
+  return  changetype<T>(0);
 }
 
 

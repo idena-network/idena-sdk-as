@@ -79,13 +79,22 @@ function createDecodeStatements(_class: ClassDeclaration): string[] {
     });
 }
 
-function createDecodeStatement(
+function createPtrDecodeStatement(
   field: FieldDeclaration | ParameterNode,
   setterPrefix = ''
 ): string {
   let T = toString(field.type!);
   let name = toString(field.name);
   return `${setterPrefix}readParam<${T}>(${name})`;
+}
+
+function createDecodeStatement(
+  field: FieldDeclaration | ParameterNode,
+  setterPrefix = ""
+): string {
+  let T = toString(field.type!);
+  let name = toString(field.name);
+  return `${setterPrefix}decode<${T}, JSON.Obj>(obj, "${name}")`;
 }
 
 function createEncodeStatements(_class: ClassDeclaration): string[] {
@@ -188,7 +197,15 @@ export class JSONBindingsBuilder extends BaseVisitor {
         func.decorators.map((decorator) => toString(decorator)).join('\n')
       );
     }
-    this.sb.push(`function __wrapper_${name}(): void {`);
+
+    var ptrParamsSb = params
+      .map((param) => {
+        let name = toString(param.name);
+        return `${name} : u32`;
+      })
+      .join(', ');
+
+    this.sb.push(`function __wrapper_${name}(${ptrParamsSb}): void {`);
     //if (params.length > 0) {
     //  this.sb.push(`  const obj = getInput();`);
     //}
@@ -202,12 +219,11 @@ export class JSONBindingsBuilder extends BaseVisitor {
         .map((param) => {
           let name = toString(param.name);
           let type = toString(param.type);
-          let res = `${name}>0 ?
-             ${createDecodeStatement(param)} : ${
+          let res = `${name}>0 ? ${createPtrDecodeStatement(param)} : ${
             param.initializer
               ? toString(param.initializer)
               : `requireParameter<${type}>("${name}")`
-}`;
+          }`;
           return res;
         })
         .join(',\n    ');
