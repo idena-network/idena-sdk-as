@@ -3,6 +3,9 @@
 cd ./sdk-core
 npm version $1 --no-git-tag-version
 npm publish
+
+sleep 2
+
 cd ../bindgen
 npm version $1 --no-git-tag-version
 yarn add idena-sdk-core@$1

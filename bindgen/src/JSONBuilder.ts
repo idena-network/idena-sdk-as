@@ -15,6 +15,7 @@ import {BaseVisitor, utils} from 'visitor-as';
 import {SimpleParser, toString, makeSnakeCase} from './utils';
 
 const IDENA_DECORATOR = 'idenaBindgen';
+const IDENA_IGNORE_FUNC_DECORATOR = 'idenaBindgenIgnore';
 const WRAPPER_PREFIX = '__wrapper_';
 
 function returnsVoid(node: FunctionDeclaration): boolean {
@@ -137,7 +138,9 @@ export class JSONBindingsBuilder extends BaseVisitor {
     let isExport = node.is(CommonFlags.EXPORT);
     let alreadyWrapped = this.wrappedFuncs.has(toString(node.name));
     let noInputOrOutput = numOfParameters(node) == 0 && returnsVoid(node);
+    let isIgnore  = utils.hasDecorator(node, IDENA_IGNORE_FUNC_DECORATOR);  
     if (
+      isIgnore ||
       !isExport ||
       alreadyWrapped ||
       noInputOrOutput ||

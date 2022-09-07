@@ -1,5 +1,5 @@
-import { ClassDeclaration, FieldDeclaration, MethodDeclaration, Source } from "visitor-as/as";
-import { ClassDecorator } from "visitor-as";
+import { ClassDeclaration, FieldDeclaration, MethodDeclaration, Source } from 'visitor-as/as';
+import { ClassDecorator } from 'visitor-as';
 export declare class ClassExporter extends ClassDecorator {
     sb: string[];
     static classSeen: ClassDeclaration;

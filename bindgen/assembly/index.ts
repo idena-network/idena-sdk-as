@@ -1,11 +1,15 @@
 import { JSONEncoder as _JSONEncoder, JSON } from "assemblyscript-json";
-import { Bytes, env, u256 } from 'idena-sdk-core';
-import { storage } from 'idena-sdk-core';
-import { util } from "idena-sdk-core";
-import {u128} from "idena-sdk-core";
+import { Bytes, env, u256, storage, util, u128, allocate as alloc } from 'idena-sdk-core';
 // Runtime functions
 // tslint:disable: no-unsafe-any
 /* eslint-disable  @typescript-eslint/no-unused-vars */
+
+// @ts-ignore
+@global 
+function __allocate(size : u32) : usize {
+  return alloc(size);
+}
+
 
 // @ts-ignore
 @global

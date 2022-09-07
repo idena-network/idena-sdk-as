@@ -6,14 +6,14 @@ import {
   CommonFlags,
   SourceKind,
   FunctionDeclaration,
-} from "visitor-as/as";
+} from 'visitor-as/as';
 
-import { utils, ClassDecorator } from "visitor-as";
-import { isEntry } from "./JSONBuilder";
-import { SimpleParser } from "./utils";
+import {utils, ClassDecorator} from 'visitor-as';
+import {isEntry} from './JSONBuilder';
+import {SimpleParser} from './utils';
 
 const toString = utils.toString;
-const privateDecorator = "contractPrivate";
+const privateDecorator = 'contractPrivate';
 
 export class ClassExporter extends ClassDecorator {
   sb: string[] = [];
@@ -47,7 +47,7 @@ export class ClassExporter extends ClassDecorator {
   visitMethodDeclaration(node: MethodDeclaration): void {
     if (node.is(CommonFlags.SET) || node.is(CommonFlags.GET)) {
       throw new Error(
-        "Exported Singleton class cannot have properties. Found " +
+        'Exported Singleton class cannot have properties. Found ' +
           node.name.text
       );
     }
@@ -57,7 +57,7 @@ export class ClassExporter extends ClassDecorator {
     }
     let privateCheck = utils.hasDecorator(node, privateDecorator)
       ? `__assertPrivate();`
-      : "";
+      : '';
     let name = toString(node.name);
     let decorators = (node.decorators || []).map(toString);
     let returnType = toString(node.signature.returnType);
@@ -71,36 +71,48 @@ export class ClassExporter extends ClassDecorator {
     let pramNames = origParams.map((param) => {
       return toString(param.name);
     });
-    let isInit = name === "constructor";
-    let assertStr: string = "";
+    let isInit = name === 'constructor';
+
+    let createContractStr = `let __contract: ${ClassExporter.className};
+if (__checkState()) {
+__contract = __getState<${ClassExporter.className}>();
+}${
+      !ClassExporter.hasConstructor
+        ? ` else {
+__contract = new ${ClassExporter.className}();
+}`
+        : ''
+    }`;
+
+    let assertStr: string = '';
     if (isInit) {
       assertStr = `assert(isNull(__contract), "contract is already initialized");`;
     } else if (ClassExporter.hasConstructor) {
       assertStr = `assert(!isNull(__contract), "contract is not initialized");`;
     }
-    let isVoid = returnType === "void";
+    let isVoid = returnType === 'void';
     let body = isInit
-      ? `__contract = new ${ClassExporter.className}(${pramNames.join(", ")});`
-      : `${!isVoid ? "let res =  " : ""}__contract.${name}(${pramNames.join(
-          ", "
+      ? `__contract = new ${ClassExporter.className}(${pramNames.join(', ')});`
+      : `${!isVoid ? 'let res =  ' : ''}__contract.${name}(${pramNames.join(
+          ', '
         )});`;
     if (isInit) {
-      name = "init";
+      name = 'deploy';
       parameters = origParams.map(
         (node) =>
           `${toString(node.name)}: ${toString(node.type)}${
-            node.initializer ? " = " + toString(node.initializer) : ""
+            node.initializer ? ' = ' + toString(node.initializer) : ''
           }`
       );
-      returnType = "void";
+      returnType = 'void';
     }
     if (isInit) {
-      if (!decorators.some((decorator) => decorator.includes("exportAs"))) {
+      if (!decorators.some((decorator) => decorator.includes('exportAs'))) {
         decorators.push(`@exportAs("deploy")`);
-        this.checkMethods("deploy");
+        this.checkMethods('deploy');
       } else {
         let decorator = node.decorators!.find(
-          (d) => toString(d.name) === "exportAs"
+          (d) => toString(d.name) === 'exportAs'
         )!;
         if (decorator.args!.length == 1) {
           this.checkMethods(toString(decorator.args![0]));
@@ -108,17 +120,18 @@ export class ClassExporter extends ClassDecorator {
       }
     }
     const hasMutateState = decorators.some((decorator) => {
-      let res = decorator.includes("mutateState");
+      let res = decorator.includes('mutateState');
       return res;
     });
     this.sb.push(
-      `${decorators.join("\n")}
-export function ${name}(${parameters.join(", ")}): ${returnType} {
+      `${decorators.join('\n')}
+export function ${name}(${parameters.join(', ')}): ${returnType} {
+  ${createContractStr}
   ${privateCheck}
   ${assertStr}
   ${body}
-  ${isInit || hasMutateState ? `__setState(__contract);` : ""}
-  ${isVoid || isInit ? "" : "return res;"}
+  ${isInit || hasMutateState ? `__setState(__contract);` : ''}
+  ${isVoid || isInit ? '' : 'return res;'}
 }`
     );
   }
@@ -134,25 +147,20 @@ export function ${name}(${parameters.join(", ")}): ${returnType} {
       ClassExporter.classSeen = node;
       ClassExporter.hasConstructor = node.members.some((member) => {
         if (member instanceof MethodDeclaration) {
-          return toString(member.name) === "constructor";
+          return toString(member.name) === 'constructor';
         }
         return false;
-      });
+      });      
+      this.visit(node.members);
       this.sb.push(
-        `let __contract: ${name};
-if (__checkState()) {
-  __contract = __getState<${name}>();
-}${
-          !ClassExporter.hasConstructor
-            ? ` else {
-  __contract = new ${name}();
-}`
-            : ""
+        `
+        @idenaBindgenIgnore
+        export function allocate(size : u32) : usize {
+          return __allocate(size);
         }`
       );
-      this.visit(node.members);
       node.flags = node.flags ^ CommonFlags.EXPORT;
-      let newStatements = SimpleParser.parseTopLevel(this.sb.join("\n")).map(
+      let newStatements = SimpleParser.parseTopLevel(this.sb.join('\n')).map(
         (n) => {
           if (n instanceof FunctionDeclaration) {
             n.flags = n.flags | CommonFlags.EXPORT;
@@ -167,7 +175,7 @@ if (__checkState()) {
   }
 
   get name(): string {
-    return "idenaBindgen";
+    return 'idenaBindgen';
   }
 
   static visit(source: Source): void {
