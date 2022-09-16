@@ -23,6 +23,7 @@
   "workspaces": [
     "bindgen",
     "sdk-core",
-    "sdk"
+    "sdk",
+    "sdk-tests"
   ]
 }
