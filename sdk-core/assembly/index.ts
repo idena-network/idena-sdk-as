@@ -11,3 +11,5 @@ export * from './persistentMap';
 export * from './region';
 export * from './state';
 export * from './utils';
+export * from './context';
+export * from './base64';

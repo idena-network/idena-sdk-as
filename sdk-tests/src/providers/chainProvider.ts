@@ -1,5 +1,5 @@
-import {BaseProvider} from "./provider";
-import {IdenaProvider, JsonReceipt} from "idena-sdk-js";
+import {BaseProvider} from './provider';
+import {IdenaProvider, JsonReceipt} from 'idena-sdk-js';
 
 export class ChainProvider extends BaseProvider {
   static create(url: string, apiKey: string) {
@@ -21,6 +21,13 @@ export class ChainProvider extends BaseProvider {
     return await this.doRequest({
       method: 'chain_txReceipt',
       params: [hash],
+    });
+  }
+
+  public async godAddress(hash: string): Promise<string> {
+    return await this.doRequest({
+      method: 'chain_god',
+      params: null
     });
   }
 }

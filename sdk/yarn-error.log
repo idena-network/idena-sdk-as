@@ -14,41 +14,57 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: ENOENT: no such file or directory, lstat 'D:\Projects\idena\idena-sdk-as\node_modules\idena-sdk-core\node_modules\assemblyscript\node_modules'
+  Invariant Violation: could not find a copy of assemblyscript to link in D:\Projects\idena\idena-sdk-as\bindgen\node_modules\idena-sdk-core\node_modules
+      at invariant (C:\Program Files (x86)\Yarn\lib\cli.js:2318:15)
+      at PackageLinker.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:48522:7)
+      at Generator.next (<anonymous>)
+      at step (C:\Program Files (x86)\Yarn\lib\cli.js:310:30)
+      at C:\Program Files (x86)\Yarn\lib\cli.js:321:13
+      at processTicksAndRejections (node:internal/process/task_queues:96:5)
 
 npm manifest: 
   {
-    "name": "idena-sdk-bindgen",
-    "version": "0.0.61",
-    "description": "Bindings for serializing contract state",
-    "main": "index.js",
-    "types": "dist/index.d.ts",
-    "scripts": {
-      "build": "tsc",
-      "build:asconfig": "node asconfig.js",
-      "pretest": "yarn build && yarn build:asconfig",
-      "test": "node ./test.js"
-    },
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com:idena-network/idena-sdk-as",
-      "directory": "idena-sdk-bindgen"
-    },
-    "keywords": [
-      "idena",
-      "assemblyscript",
-      "contracts"
-    ],
-    "license": "(MIT AND Apache-2.0)",
-    "files": [
-      "index.js",
-      "compiler.js",
-      "dist/",
-      "assembly/index.ts"
-    ],
-    "dependencies": {
-      "idena-sdk-core": "0.0.60"
-    }
+      "name": "idena-sdk-as",
+      "version": "0.0.61",
+      "description": "Collection of packages for developing IDENA smart contracts in AssemblyScript",
+      "types": "assembly/index.ts",
+      "repository": {
+          "type": "git",
+          "url": "git+https://github.com:idena-network/idena-sdk-as",
+          "directory": "sdk"
+      },
+      "license": "(MIT AND Apache-2.0)",
+      "dependencies": {
+          "idena-sdk-bindgen": "0.0.60",
+          "idena-sdk-core": "0.0.59",
+          "idena-sdk-tests": "0.0.60"
+      },
+      "scripts": {
+          "test": "yarn asp",
+          "asp:ci": "asp",
+          "asp": "yarn asp:ci --verbose",
+          "build": "asb assembly/__tests__/main.ts -- --noEmit"
+      },
+      "devDependencies": {
+          "@as-pect/cli": "^6.2.4",
+          "@assemblyscript/loader": "^0.18.9",
+          "@types/bn.js": "^5.1.0",
+          "@types/bs58": "^4.0.1",
+          "@types/jest": "^26.0.0",
+          "@types/js-base64": "^3.0.0",
+          "@types/node": "^14.6.2",
+          "assert-no-diff": "^3.0.4",
+          "husky": "^4.2.5",
+          "jest": "^26.4.2",
+          "prettier": "^2.1.1",
+          "ts-jest": "^26.3.0",
+          "ts-node": "^9.0.0",
+          "typedoc": "^0.22.17",
+          "typescript": "^4.1.5"
+      },
+      "engines": {
+          "node": ">=12.0.0"
+      }
   }
 
 yarn manifest: 

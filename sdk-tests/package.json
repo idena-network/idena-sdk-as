@@ -1,19 +1,23 @@
 {
   "name": "idena-sdk-tests",
-  "version": "0.0.36",
-  "description": "",  
+  "version": "0.0.67",
+  "description": "",
   "author": "",
   "license": "ISC",
-  "types": "index.ts",
+  "main": "index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
-    "idena-sdk-js": "^0.1.0",
-    "axios": "^0.27.2"
+    "axios": "^0.27.2",
+    "idena-sdk-js": "^0.1.0"
   },
   "devDependencies": {
-    "typescript": "^4.6.2",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.12.0",
     "eslint": "^8.9.0",
-    "prettier": "^2.5.1"
+    "prettier": "^2.5.1",
+    "typescript": "^4.6.2"
   }
 }

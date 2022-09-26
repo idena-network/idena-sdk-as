@@ -86,7 +86,7 @@ function createPtrDecodeStatement(
 ): string {
   let T = toString(field.type!);
   let name = toString(field.name);
-  return `${setterPrefix}readParam<${T}>(${name})`;
+  return `${setterPrefix}readRegion<${T}>(${name})`;
 }
 
 function createDecodeStatement(
@@ -208,10 +208,12 @@ export class JSONBindingsBuilder extends BaseVisitor {
       })
       .join(', ');
 
-    this.sb.push(`function __wrapper_${name}(${ptrParamsSb}): void {`);
-    //if (params.length > 0) {
-    //  this.sb.push(`  const obj = getInput();`);
-    //}
+    var wrappedReturnType = "void";
+    if (toString(returnType) !== 'void') {
+      wrappedReturnType  = "usize";
+    }
+
+    this.sb.push(`function __wrapper_${name}(${ptrParamsSb}): ${wrappedReturnType} {`);    
     if (toString(returnType) !== 'void') {
       this.sb.push(`  let result: ${toString(returnType)} = ${name}(`);
     } else {
@@ -233,10 +235,8 @@ export class JSONBindingsBuilder extends BaseVisitor {
     }
     this.sb[this.sb.length - 1] += ');';
     if (toString(returnType) !== 'void') {
-      this.sb.push(`  const val = encode<${returnTypeName}>(${
-        hasNull ? `changetype<${returnTypeName}>(result)` : 'result'
-      });
-  value_return(val.byteLength, val.dataStart);`);
+      this.sb.push(`
+      return write_region<${toString(returnType)}>(result);`);
     }
     this.sb.push(`}
 export { ${WRAPPER_PREFIX + name} as ${name} }
@@ -301,6 +301,7 @@ ${this.camelCaseToSnakeCaseExport(name)}
 
   private _decode(obj: JSON.Obj): ${className} {
     ${createDecodeStatements(_class).join('\n    ')}
+    log("invoke _decode for ${_class.name}");
     return this;
   }
 

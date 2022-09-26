@@ -1,6 +1,6 @@
-import {util} from "./utils";
-import {Address} from "./address";
-import {u128} from "./index";
+import {util} from './utils';
+import {Address} from './address';
+import {u128} from './index';
 
 export class Bytes extends Uint8Array {
   static fromBytes(data: Uint8Array): Bytes {
@@ -65,6 +65,55 @@ export class Bytes extends Uint8Array {
   toI8(): i8 {
     let d = new DataView(this.buffer);
     return d.getInt8(0);
+  }
+
+  static fromU8(n: u8): Bytes {
+    let bs = new Uint8Array(1);
+    let d = new DataView(bs.buffer);
+    d.setUint8(0, n);
+    return changetype<Bytes>(bs);
+  }
+
+  static fromU16(n: u16): Bytes {
+    let bs = new Uint8Array(2);
+    let d = new DataView(bs.buffer);
+    d.setUint16(0, n, true);
+    return changetype<Bytes>(bs);
+  }
+
+  static fromU32(n: u32): Bytes {
+    let bs = new Uint8Array(4);
+    let d = new DataView(bs.buffer);
+    d.setUint32(0, n, true);
+    return changetype<Bytes>(bs);
+  }
+
+  static fromI8(n: i8): Bytes {
+    let bs = new Uint8Array(1);
+    let d = new DataView(bs.buffer);
+    d.setInt8(0, n);
+    return changetype<Bytes>(bs);
+  }
+
+  static fromI16(n: i16): Bytes {
+    let bs = new Uint8Array(2);
+    let d = new DataView(bs.buffer);
+    d.setInt16(0, n, true);
+    return changetype<Bytes>(bs);
+  }
+
+  static fromI32(n: i32): Bytes {
+    let bs = new Uint8Array(4);
+    let d = new DataView(bs.buffer);
+    d.setInt32(0, n, true);
+    return changetype<Bytes>(bs);
+  }
+
+  static fromI64(n: i64): Bytes {
+    let bs = new Uint8Array(8);
+    let d = new DataView(bs.buffer);
+    d.setInt64(0, n, true);
+    return changetype<Bytes>(bs);
   }
 
   static fromU64(n: u64): Bytes {

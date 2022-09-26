@@ -1,5 +1,5 @@
 import { JSONEncoder as _JSONEncoder, JSON } from "assemblyscript-json";
-import { Bytes, env, u256, storage, util, u128, allocate as alloc } from 'idena-sdk-core';
+import { Bytes, env, u256, storage, util, u128, allocate as alloc, Address, base64, debug } from 'idena-sdk-core';
 // Runtime functions
 // tslint:disable: no-unsafe-any
 /* eslint-disable  @typescript-eslint/no-unused-vars */
@@ -87,6 +87,11 @@ function panic(): void {
 @global
 function panic_utf8(len: Usize, ptr: Usize): void {
   return;
+}
+
+@global
+function log(str : string) : void {
+  debug(str);
 }
 
 
@@ -466,7 +471,7 @@ function decode<T, V = Uint8Array>(buf: V, name: string = ""): T {
     // @ts-ignore
     if (value instanceof Uint8Array) {
       // @ts-ignore
-      return base64.decode(getStr(val, name));
+      return changetype<T>(base64.decode(getStr(val, name)));
     }
     // @ts-ignore
     // assert(val instanceof Arr, "Value with Key: " +  name + " with type " + nameof<T>()  + " is expected to be an array")
@@ -535,8 +540,32 @@ function __setState<T>(state: T): void {
 }
 
 @global
-function readParam<T>(ptr: usize) : T {
+function readRegion<T>(ptr: usize) : T {
   let data = ptrToBytes(ptr);
+  return bytes_to_obj<T>(data);
+}
+
+
+@global
+function write_region<T>(value: T) : usize {  
+  var data = obj_to_bytes<T>(value);
+  return util.bytesToPtr(data);
+}
+
+
+@global
+function obj_to_bytes<T>(val: T) : Uint8Array {  
+  var data : Uint8Array;
+  // @ts-ignore
+  if (isDefined(value.encode)) {
+    return encode<T>(val);
+  } else {  
+    return  encodeToBytes(val);
+  }  
+}
+
+@global
+function bytes_to_obj<T>(data : Bytes) : T {    
   var value : T;
   // @ts-ignore
   if (isDefined(value.decode)) {
@@ -600,9 +629,81 @@ function decodeBytes<T>(buf: Uint8Array): T {
     // @ts-ignore
     return <T>u256.fromBytes(buf);
   }
+  // @ts-ignore
+  if (value instanceof Address){
+    // @ts-ignore
+    return <T>Address.fromBytes(buf);
+  }
+
+  // @ts-ignore
+  if (value instanceof Uint8Array){
+    // @ts-ignore
+    return buf;
+  }
   if (isString<T>()){
      // @ts-ignore
      return changetype<T>(util.bytesToString(buf));
+  }
+  env.panic(util.strToPtr(`unsupported type of parameter ${valType}`));
+  // @ts-ignore
+  return  changetype<T>(0);
+}
+
+
+function encodeToBytes<T>(value: T): Uint8Array {  
+  const valType = nameof<T>();
+  if (isInteger<T>()) {      
+      if (valType == "u8") {
+        // @ts-ignore
+        return Bytes.fromU8(val);
+      }
+      if (valType == "u16") {
+        // @ts-ignore
+        return  Bytes.fromU16(val);
+      }
+      if (valType == "u32") {
+        // @ts-ignore
+        return Bytes.fromU32(val);
+      }
+      if (valType == "u64") {
+        // @ts-ignore
+        return Bytes.fromU64(val);
+      }
+      if (valType == "i8") {
+        // @ts-ignore
+        return Bytes.fromI8(val);
+      }
+      if (valType == "i16") {
+        // @ts-ignore
+        return Bytes.fromI16(val);
+      }
+      if (valType == "i32") {
+        // @ts-ignore
+        return Bytes.fromI32(val);
+      }
+      if (valType == "i64") {
+        // @ts-ignore
+        return Bytes.fromI64(val);
+      }
+  }
+   // @ts-ignore
+  if (value instanceof u128) {
+    // @ts-ignore
+    return (value as u128).toUint8Array();
+  }
+   // @ts-ignore
+  if (value instanceof u256) {
+    // @ts-ignore
+    return (value as u256).toUint8Array();
+  }
+  // @ts-ignore
+  if (value instanceof Uint8Array){
+    // @ts-ignore
+    return (value as Uint8Array);
+  }
+  if (isString<T>()){
+     // @ts-ignore
+     return util.stringToBytes(value);
   }
   env.panic(util.strToPtr(`unsupported type of parameter ${valType}`));
   // @ts-ignore

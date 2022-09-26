@@ -97,7 +97,7 @@ __contract = new ${ClassExporter.className}();
           ', '
         )});`;
     if (isInit) {
-      name = 'deploy';
+      name = '__deploy';
       parameters = origParams.map(
         (node) =>
           `${toString(node.name)}: ${toString(node.type)}${

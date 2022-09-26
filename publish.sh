@@ -4,19 +4,27 @@ cd ./sdk-core
 npm version $1 --no-git-tag-version
 npm publish
 
-sleep 2
 
 cd ../bindgen
-npm version $1 --no-git-tag-version
 yarn add idena-sdk-core@$1
+npm version $1 --no-git-tag-version
 yarn build
 npm publish
 
-cd ../sdk
+
+cd ../sdk-tests
+yarn build
 npm version $1 --no-git-tag-version
+npm publish
+
+cd ../sdk
 
 yarn add idena-sdk-core@$1
 yarn add idena-sdk-bindgen@$1
+yarn add idena-sdk-tests@$1
+npm version $1 --no-git-tag-version
 npm publish
+
+
 
 

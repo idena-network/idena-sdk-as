@@ -1,30 +1,19 @@
 import {Bytes} from "./bytes";
 import {env} from "./env";
-import {Region} from "./region";
 import {util} from "./utils";
-
+@idenaBindgen
 export class PersistentMap<K, V> {
-  private readonly _elementPrefix: Bytes;
-  private readonly _encodeKey: (key: K) => Bytes;
-  private readonly _encodeValue: (value: V) => Bytes;
-  private readonly _decodeValue: (a: Bytes) => V;
-
+  private _elementPrefix: Bytes;
+  
   constructor(
-    prefix: string,
-    encodeKey: (key: K) => Bytes,
-    encodeValue: (value: V) => Bytes ,
-    decodeValue: (bytes: Bytes) => V
-  ) {
-    this._elementPrefix = Bytes.fromBytes(util.stringToBytes(prefix));
-    this._encodeKey = encodeKey;
-    this._encodeValue =encodeValue;
-    this._decodeValue = decodeValue;
+    prefix: string) {
+    this._elementPrefix = Bytes.fromBytes(util.stringToBytes(prefix));   
   }
 
-  private encodeKey(key: K): usize {
-    let keyBytes = this._encodeKey(key);
+  private encodeKey(key: K): usize {    
+    let keyBytes = Bytes.fromBytes(obj_to_bytes<K>(key));
     keyBytes = keyBytes.prepend(this._elementPrefix);
-    return changetype<usize>(new Region(keyBytes));
+    return util.bytesToPtr(keyBytes);
   }
 
   delete(key: K): void {
@@ -36,13 +25,12 @@ export class PersistentMap<K, V> {
     if (valuePtr == 0) {
       return defaultValue;
     }
-    let value = changetype<Region>(valuePtr);
-    let bytes = Bytes.fromBytes(value.read());
-    return this._decodeValue(bytes);
+    let value = util.ptrToBytes(valuePtr);
+    return bytes_to_obj<V>(value);
   }
 
   set(key: K, value: V): void {
-    let valueRegion = changetype<usize>(new Region(this._encodeValue(value)));
+    let valueRegion = util.bytesToPtr(obj_to_bytes<V>(value));
     env.setStorage(this.encodeKey(key), valueRegion);
   }
 }

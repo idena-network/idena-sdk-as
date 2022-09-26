@@ -27,7 +27,7 @@ declare interface Uint8Array {
   /**
    * Decorator used to make classes serializable.
    */
-  declare function nearBindgen(_class: any): void;
+  declare function idenaBindgen(_class: any): void;
   
   declare function defaultValue<T>(): T;
   
