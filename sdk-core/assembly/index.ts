@@ -13,3 +13,5 @@ export * from './state';
 export * from './utils';
 export * from './context';
 export * from './base64';
+export * from './host';
+export * from './balance';

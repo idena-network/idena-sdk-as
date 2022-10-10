@@ -1,6 +1,6 @@
-import {env} from './env'
-import {Region} from './region'
-import {util} from './utils'
+import {env} from './env';
+import {Region} from './region';
+import {util} from './utils';
 
 export function debug<T>(msg: T): void {
   let msg_encoded: Uint8Array;

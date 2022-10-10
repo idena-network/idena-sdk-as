@@ -30,4 +30,11 @@ export class ChainProvider extends BaseProvider {
       params: null
     });
   }
+
+  public async resetTo(block : number) : Promise<void> {
+    return await this.doRequest({
+      method: 'chain_resetTo',
+      params: [block],
+    });
+  }
 }

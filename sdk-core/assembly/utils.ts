@@ -22,9 +22,9 @@ export namespace util {
      * Decode an UTF-8 encoded Uint8Array into a string.
      * @param bytes array to decode
      */
-    export function bytesToString(bytes: Uint8Array | null): string | null {
+    export function bytesToString(bytes: Uint8Array | null): string {
       if (bytes == null) {
-        return null;
+        return "";
       }
       return String.UTF8.decode(uint8ArrayToBuffer(bytes), true);
     }
@@ -91,21 +91,20 @@ export namespace util {
     export function toHexString(
       data: Uint8Array,
       withPrefix: bool = true
-    ): string {
-      return (withPrefix ? '0x' : '') + data.reduce(
-        (output, elem) => output + `0${(elem & 0xff).toString(16)}`.slice(-2),
-        ""
-      );
+    ): string {    
+      const r = env.bytes_to_hex(bytesToPtr(data)) ;
+      return (withPrefix ? '0x' : '') + (util.bytesToString(ptrToBytes(r)) as string);            
     }
 
-    export function packPlainArgument(data: Bytes): Bytes {
+
+    export function packPlainArguments(data: Bytes): Bytes {
       const result = new Bytes(data.length + 1);
       result[0] = 0; // plain format
       memory.copy(result.dataStart + 1, data.dataStart, data.length);
       return result;
     }
 
-    export function packProtobufArgument(data: Bytes[]): Bytes {
+    export function packProtobufArguments(data: Bytes[]): Bytes {
       let args = new Array<Uint8Array>();
       for (let i = 0; i < data.length; i++) {
         args.push(changetype<Uint8Array>(data[i]));
@@ -131,9 +130,8 @@ export namespace util {
     export function assert(value: bool, msg: string): void {
       if (value) {
         return;
-      }
-      let r = new Region(util.stringToBytes(msg));
-      env.panic(changetype<usize>(r));
+      }      
+      env.panic(util.strToPtr(msg));
     }
 
     export function ptrToBytes(ptr: usize): Bytes {
@@ -142,13 +140,23 @@ export namespace util {
     }
 
     export function bytesToPtr(data: Uint8Array): usize {
+      if (data.length == 0) {
+        return 0;
+      }
       let r = new Region(data);
+      return regionToPtr(r);
+    }
+
+    export function regionToPtr(r: Region): usize {      
       return changetype<usize>(r);
     }
 
     export function strToPtr(data: string): usize {
+      if (data.length == 0) {
+        return 0;
+      }
       let r = new Region(util.stringToBytes(data));
-      return changetype<usize>(r);
+      return regionToPtr(r);
     }
 
     // Private helpers

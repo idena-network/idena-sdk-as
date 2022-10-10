@@ -1,5 +1,5 @@
 import { JSONEncoder as _JSONEncoder, JSON } from "assemblyscript-json";
-import { Bytes, env, u256, storage, util, u128, allocate as alloc, Address, base64, debug } from 'idena-sdk-core';
+import { Bytes, env, u256, storage, util, u128, allocate, Address, base64, debug, Balance, balanceToBytes, bytesToBalance } from 'idena-sdk-core';
 // Runtime functions
 // tslint:disable: no-unsafe-any
 /* eslint-disable  @typescript-eslint/no-unused-vars */
@@ -7,7 +7,7 @@ import { Bytes, env, u256, storage, util, u128, allocate as alloc, Address, base
 // @ts-ignore
 @global 
 function __allocate(size : u32) : usize {
-  return alloc(size);
+  return allocate(size);
 }
 
 
@@ -23,12 +23,6 @@ function isNull<T>(t: T): bool {
 // @ts-ignore
 @global
 function notPayable1(): void {
-  return;
-}
-
-// @ts-ignore
-@global
-function oneYocto(): void {
   return;
 }
 
@@ -55,61 +49,11 @@ class JSONEncoder extends _JSONEncoder {
 
 type Usize = u64;
 
-
-
-// @ts-ignore
-@global
-function read_register(register_id: Usize, ptr: Usize): void {
-  return;
-}
-// @ts-ignore
-@global
-function register_len(register_id: Usize): Usize {    
- return 0;
-}
-
-// @ts-ignore
-@global
-function input(register_id: Usize): void {  
- return;
-}
-// @ts-ignore
-@global
-function value_return(value_len: Usize, value_ptr: Usize): void {
-  return;
-}
-// @ts-ignore
-@global
-function panic(): void {
-  return;
-}
-// @ts-ignore
-@global
-function panic_utf8(len: Usize, ptr: Usize): void {
-  return;
-}
-
 @global
 function log(str : string) : void {
   debug(str);
 }
 
-
-// @ts-ignore
-@global
-function getInput(): JSON.Obj {
-  // Reading input bytes.
-  /*
-  input(0);
-  let json_len = register_len(0);
-  if (json_len == U32.MAX_VALUE) {
-    panic();
-  }
-  let json = new Uint8Array(json_len as u32);
-  // @ts-ignore
-  read_register(0, json.dataStart);*/
-  return <JSON.Obj>JSON.parse("{}");
-}
 
 // @ts-ignore
 @global
@@ -619,15 +563,21 @@ function decodeBytes<T>(buf: Uint8Array): T {
         return <T>bytes.toI64();
       }
   }
+  // @ts-ignore
+  if (value instanceof Balance) {
+    // @ts-ignore
+    return <T>bytesToBalance(buf);
+  }
+
    // @ts-ignore
   if (value instanceof u128) {
     // @ts-ignore
-    return <T>u128.fromBytes(buf);
+    return <T>u128.fromBytes(buf, false);
   }
    // @ts-ignore
   if (value instanceof u256) {
     // @ts-ignore
-    return <T>u256.fromBytes(buf);
+    return <T>u256.fromBytes(buf, false);
   }
   // @ts-ignore
   if (value instanceof Address){
@@ -638,13 +588,13 @@ function decodeBytes<T>(buf: Uint8Array): T {
   // @ts-ignore
   if (value instanceof Uint8Array){
     // @ts-ignore
-    return buf;
+    return changetype<T>(buf);
   }
   if (isString<T>()){
      // @ts-ignore
      return changetype<T>(util.bytesToString(buf));
   }
-  env.panic(util.strToPtr(`unsupported type of parameter ${valType}`));
+  throw new Error(`unsupported type of parameter ${valType}`);
   // @ts-ignore
   return  changetype<T>(0);
 }
@@ -652,60 +602,66 @@ function decodeBytes<T>(buf: Uint8Array): T {
 
 function encodeToBytes<T>(value: T): Uint8Array {  
   const valType = nameof<T>();
+  debug(`encode to bytes type=${valType}`);
   if (isInteger<T>()) {      
       if (valType == "u8") {
         // @ts-ignore
-        return Bytes.fromU8(val);
+        return Bytes.fromU8(value);
       }
       if (valType == "u16") {
         // @ts-ignore
-        return  Bytes.fromU16(val);
+        return  Bytes.fromU16(value);
       }
       if (valType == "u32") {
         // @ts-ignore
-        return Bytes.fromU32(val);
+        return Bytes.fromU32(value);
       }
       if (valType == "u64") {
         // @ts-ignore
-        return Bytes.fromU64(val);
+        return Bytes.fromU64(value);
       }
       if (valType == "i8") {
         // @ts-ignore
-        return Bytes.fromI8(val);
+        return Bytes.fromI8(value);
       }
       if (valType == "i16") {
         // @ts-ignore
-        return Bytes.fromI16(val);
+        return Bytes.fromI16(value);
       }
       if (valType == "i32") {
         // @ts-ignore
-        return Bytes.fromI32(val);
+        return Bytes.fromI32(value);
       }
       if (valType == "i64") {
         // @ts-ignore
-        return Bytes.fromI64(val);
+        return Bytes.fromI64(value);
       }
+  }
+  // @ts-ignore
+  if (value instanceof Balance) {
+    // @ts-ignore
+    return balanceToBytes(value as Balance);
   }
    // @ts-ignore
   if (value instanceof u128) {
     // @ts-ignore
-    return (value as u128).toUint8Array();
+    return (value as u128).toUint8Array(false);
   }
    // @ts-ignore
   if (value instanceof u256) {
     // @ts-ignore
-    return (value as u256).toUint8Array();
+    return (value as u256).toUint8Array(false);
   }
   // @ts-ignore
   if (value instanceof Uint8Array){
     // @ts-ignore
-    return (value as Uint8Array);
+    return changetype<Uint8Array>(value);
   }
   if (isString<T>()){
      // @ts-ignore
      return util.stringToBytes(value);
   }
-  env.panic(util.strToPtr(`unsupported type of parameter ${valType}`));
+  throw new Error(`unsupported type of parameter ${valType}`);  
   // @ts-ignore
   return  changetype<T>(0);
 }

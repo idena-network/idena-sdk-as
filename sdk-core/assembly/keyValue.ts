@@ -1,31 +1,28 @@
 import {Bytes} from './bytes';
 import {Region} from './region';
 import {env} from './env';
+import { util } from 'idena-sdk-core';
 
+@idenaBindgen
 export class KeyValue<K, V> {
-  private readonly key: Bytes;
-  private readonly _encodeValue: (value: V) => Bytes;
-  private readonly _decodeValue: (a: Bytes) => V;
-
-  constructor(
-    key: K,
-    encodeKey: (key: K) => Bytes,
-    encodeValue: (value: V) => Bytes,
-    decodeValue: (bytes: Bytes) => V
-  ) {
-    this.key = encodeKey(key);
-    this._encodeValue = encodeValue;
-    this._decodeValue = decodeValue;
+  private key: Bytes;
+  
+  constructor(key: K) {
+    this.key = this.encodeKey<K>(key);
   }
 
-  private encodeKey(): usize {
-    return changetype<usize>(new Region(this.key));
+  private encodeKey<K>(key : K): Bytes {
+    return Bytes.fromBytes(obj_to_bytes<K>(key));
+  }
+
+  private keyPtr(): usize {
+    return util.bytesToPtr(this.key);
   }
 
   set(value: V): void {
     env.setStorage(
-      this.encodeKey(),
-      changetype<usize>(new Region(this._encodeValue(value)))
+      this.keyPtr(),
+      util.bytesToPtr(obj_to_bytes<V>(value))
     );
   }
 
@@ -34,15 +31,15 @@ export class KeyValue<K, V> {
   }
 
   empty(): bool {
-    return KeyValue._empty(env.getStorage(this.encodeKey()));
+    return KeyValue._empty(env.getStorage(this.keyPtr()));
   }
 
   get(defaultValue: V): V {
-    let ptr = env.getStorage(this.encodeKey());
+    let ptr = env.getStorage(this.keyPtr());
     if (KeyValue._empty(ptr)) {
       return defaultValue;
     }
-    let bytes = Bytes.fromBytes(changetype<Region>(ptr).read());
-    return this._decodeValue(bytes);
+    let bytes = util.ptrToBytes(ptr);
+    return bytes_to_obj<V>(bytes);
   }
 }
