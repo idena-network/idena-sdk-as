@@ -1,6 +1,6 @@
 {
     "name": "idena-sdk-as",
-    "version": "0.0.87",
+    "version": "0.0.88",
     "description": "Collection of packages for developing IDENA smart contracts in AssemblyScript",
     "types": "assembly/index.ts",
     "repository": {
@@ -10,9 +10,9 @@
     },
     "license": "(MIT AND Apache-2.0)",
     "dependencies": {
-        "idena-sdk-bindgen": "0.0.87",
-        "idena-sdk-core": "0.0.87",
-        "idena-sdk-tests": "0.0.87"
+        "idena-sdk-bindgen": "0.0.88",
+        "idena-sdk-core": "0.0.88",
+        "idena-sdk-tests": "0.0.88"
     },
     "scripts": {
         "test": "yarn asp",

@@ -1,6 +1,6 @@
 {
   "name": "idena-sdk-bindgen",
-  "version": "0.0.87",
+  "version": "0.0.88",
   "description": "Bindings for serializing contract state",
   "main": "index.js",
   "types": "dist/index.d.ts",
@@ -28,6 +28,6 @@
     "assembly/index.ts"
   ],
   "dependencies": {
-    "idena-sdk-core": "0.0.87"
+    "idena-sdk-core": "0.0.88"
   }
 }

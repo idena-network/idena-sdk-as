@@ -154,4 +154,8 @@ export namespace Host {
       )
     );
   }
+
+  export function emitEvent(eventName : string, args: Bytes[]) : void {
+    env.emitEvent(util.strToPtr(eventName), util.bytesToPtr(util.packProtobufArguments(args)));
+  }
 }

@@ -10,4 +10,5 @@ export declare class ContractProvider extends BaseProvider {
     estimateCall(contract: any, method: any, amount: any, maxFee: string, args?: ContractArgument[]): Promise<JsonReceipt>;
     readData(contract: any, key: any, format: string): Promise<string>;
     readMap(contract: any, map: any, key: any, format: string): Promise<string>;
+    events(contract: string): Promise<string>;
 }

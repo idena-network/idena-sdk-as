@@ -108,4 +108,11 @@ export class ContractProvider extends BaseProvider {
       params: [contract, map, key, format],
     });
   }
+
+  public async events(contract : string) : Promise<string> {
+    return await this.doRequest({
+      method: 'contract_events',
+      params: [{contract: contract}],
+    });
+  }
 }
