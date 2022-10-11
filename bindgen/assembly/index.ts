@@ -530,35 +530,35 @@ function decodeBytes<T>(buf: Uint8Array): T {
   const valType = nameof<T>();
   if (isInteger<T>()) {
       let bytes = Bytes.fromBytes(buf);      
-      if (valType == "u8") {
+      if (value instanceof u8) {
         // @ts-ignore
         return <T>bytes.toU8();
       }
-      if (valType == "u16") {
+      if (value instanceof u16) {
         // @ts-ignore
         return <T>bytes.toU16();
       }
-      if (valType == "u32") {
+      if (value instanceof u32) {
         // @ts-ignore
         return <T>bytes.toU32();
       }
-      if (valType == "u64") {
+      if (value instanceof u64) {
         // @ts-ignore
         return <T>bytes.toU64();
       }
-      if (valType == "i8") {
+      if (value instanceof i8) {
         // @ts-ignore
         return <T>bytes.toI8();
       }
-      if (valType == "i16") {
+      if (value instanceof i16) {
         // @ts-ignore
         return <T>bytes.toI16();
       }
-      if (valType == "i32") {
+      if (value instanceof i32) {
         // @ts-ignore
         return <T>bytes.toI32();
       }
-      if (valType == "i64") {
+      if (value instanceof i64) {
         // @ts-ignore
         return <T>bytes.toI64();
       }
@@ -604,38 +604,38 @@ function encodeToBytes<T>(value: T): Uint8Array {
   const valType = nameof<T>();
   debug(`encode to bytes type=${valType}`);
   if (isInteger<T>()) {      
-      if (valType == "u8") {
-        // @ts-ignore
-        return Bytes.fromU8(value);
-      }
-      if (valType == "u16") {
-        // @ts-ignore
-        return  Bytes.fromU16(value);
-      }
-      if (valType == "u32") {
-        // @ts-ignore
-        return Bytes.fromU32(value);
-      }
-      if (valType == "u64") {
-        // @ts-ignore
-        return Bytes.fromU64(value);
-      }
-      if (valType == "i8") {
-        // @ts-ignore
-        return Bytes.fromI8(value);
-      }
-      if (valType == "i16") {
-        // @ts-ignore
-        return Bytes.fromI16(value);
-      }
-      if (valType == "i32") {
-        // @ts-ignore
-        return Bytes.fromI32(value);
-      }
-      if (valType == "i64") {
-        // @ts-ignore
-        return Bytes.fromI64(value);
-      }
+    if (value instanceof u8) {
+      // @ts-ignore
+      return Bytes.fromU8(value);
+    }
+    if (value instanceof u16) {
+      // @ts-ignore
+      return  Bytes.fromU16(value);
+    }
+    if (value instanceof u32) {
+      // @ts-ignore
+      return Bytes.fromU32(value);
+    }
+    if (value instanceof u64) {
+      // @ts-ignore
+      return Bytes.fromU64(value);
+    }
+    if (value instanceof i8) {
+      // @ts-ignore
+      return Bytes.fromI8(value);
+    }
+    if (value instanceof i16) {
+      // @ts-ignore
+      return Bytes.fromI16(value);
+    }
+    if (value instanceof i32) {
+      // @ts-ignore
+      return Bytes.fromI32(value);
+    }
+    if (value instanceof i64) {
+      // @ts-ignore
+      return Bytes.fromI64(value);
+    }
   }
   // @ts-ignore
   if (value instanceof Balance) {

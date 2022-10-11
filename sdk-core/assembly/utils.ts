@@ -135,6 +135,9 @@ export namespace util {
     }
 
     export function ptrToBytes(ptr: usize): Bytes {
+      if (ptr == 0) {
+        return new Bytes(0);
+      }
       let region = changetype<Region>(ptr);
       return Bytes.fromBytes(region.read());
     }

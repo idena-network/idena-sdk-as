@@ -7,6 +7,12 @@ export function balanceToBytes(b: Balance): Uint8Array {
 }
 
 export function bytesToBalance(data: Uint8Array): Balance {
+  const u128Size = 16;
+  if (data.length < u128Size) {
+    let newData = new Uint8Array(u128Size);
+    memory.copy(newData.dataStart+u128Size - data.length, data.dataStart, data.length);
+    data = newData;
+  }
   return u128.fromUint8ArrayBE(data);
 }
 
