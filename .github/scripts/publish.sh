@@ -1,5 +1,4 @@
 #!/bin/bash
-export NODE_AUTH_TOKEN=$2
 tag=$1
 version="${tag:1}"
 echo "Pushed new version ${version}"

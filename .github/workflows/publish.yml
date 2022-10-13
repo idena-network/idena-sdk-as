@@ -19,7 +19,9 @@ jobs:
 
       - uses: borales/actions-yarn@v3.0.0
       - run: yarn install
-
+            
       - name: Run build script
-        run: ./.github/scripts/publish.sh ${{steps.tag.outputs.tag}} ${{secrets.NPM_TOKEN}}
+        run: ./.github/scripts/publish.sh ${{steps.tag.outputs.tag}} 
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         shell: bash      
