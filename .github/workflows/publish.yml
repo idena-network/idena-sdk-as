@@ -1,0 +1,25 @@
+name: Publish
+
+on:
+  push:
+    tags: 
+      - '*'
+
+jobs:
+  publish-npm:
+    name: "Publish to npm"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          registry-url: https://registry.npmjs.org/
+
+      - uses: borales/actions-yarn@v3.0.0
+      - run: yarn install
+
+      - name: Run build script
+        run: ./.github/scripts/build.sh ${{steps.tag.outputs.tag}} ${{secrets.NPM_TOKEN}}
+        shell: bash      
