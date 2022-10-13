@@ -21,5 +21,5 @@ jobs:
       - run: yarn install
 
       - name: Run build script
-        run: ./.github/scripts/build.sh ${{steps.tag.outputs.tag}} ${{secrets.NPM_TOKEN}}
+        run: ./.github/scripts/publish.sh ${{steps.tag.outputs.tag}} ${{secrets.NPM_TOKEN}}
         shell: bash      
