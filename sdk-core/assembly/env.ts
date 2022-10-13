@@ -68,7 +68,7 @@ export namespace env {
     export declare function caller(): i32
 
     // @ts-ignore
-    @external("env", "originalCaller")
+    @external("env", "original_caller")
     // Reads signer of original transaction
     export declare function originalCaller(): i32
 
