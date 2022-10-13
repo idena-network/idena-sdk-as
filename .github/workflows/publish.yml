@@ -20,6 +20,11 @@ jobs:
       - uses: borales/actions-yarn@v3.0.0
       - run: yarn install
 
+      - name: Authenticate with the GitHub Package Registry
+        run:
+          echo "//registry.npmjs.org:_authToken=${{ secrets.NPM_TOKEN }}" >
+          ~/.npmrc
+
       - name: Run build script
         run: ./.github/scripts/publish.sh ${{steps.tag.outputs.tag}} 
         env:
