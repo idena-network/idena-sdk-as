@@ -10,16 +10,16 @@ jobs:
     name: "Publish to npm"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: '16'
           registry-url: https://registry.npmjs.org/
-
+         
       - uses: borales/actions-yarn@v3.0.0
       - run: yarn install
-            
+
       - name: Run build script
         run: ./.github/scripts/publish.sh ${{steps.tag.outputs.tag}} 
         env:
