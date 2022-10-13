@@ -16,15 +16,12 @@ jobs:
         with:
           node-version: '16'
           registry-url: https://registry.npmjs.org/
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
          
       - uses: borales/actions-yarn@v3.0.0
       - run: yarn install
-
-      - name: Authenticate with the GitHub Package Registry
-        run:
-          echo "//registry.npmjs.org:_authToken=${{ secrets.NPM_TOKEN }}" >
-          ~/.npmrc
-
+    
       - name: Run build script
         run: ./.github/scripts/publish.sh ${{steps.tag.outputs.tag}} 
         env:
