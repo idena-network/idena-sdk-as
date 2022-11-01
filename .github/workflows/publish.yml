@@ -20,7 +20,8 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
          
       - uses: borales/actions-yarn@v3.0.0
-      - run: yarn install --legacy-peer-deps
+        with:
+          cmd: install --legacy-peer-deps
       - run: sudo chown $USER /home/runner/work/idena-sdk-as
 
 
