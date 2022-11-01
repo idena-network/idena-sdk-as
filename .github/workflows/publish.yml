@@ -21,7 +21,9 @@ jobs:
          
       - uses: borales/actions-yarn@v3.0.0
       - run: yarn install --legacy-peer-deps
-        
+      - run: sudo chown $USER /home/runner/work/idena-sdk-as
+
+
       - name: Get tag
         id: tag
         uses: dawidd6/action-get-tag@v1
