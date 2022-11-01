@@ -19,14 +19,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "asbuild": "^0.2.0",
-    "assemblyscript": "^0.19.3",
-    "assemblyscript-json": "^1.0.0",
-    "assemblyscript-temporal": "^1.11.0",
-    "as-hex": "^1.0.1",
-    "as-proto": "^0.2.5",
     "@serial-as/borsh": "1.0.4",
     "as-bignum": "^0.2.15",
+    "as-hex": "^1.0.1",
+    "as-proto": "^0.2.5",   
+    "assemblyscript": "^0.19.23",
+    "assemblyscript-json": "^1.0.0",
+    "assemblyscript-temporal": "^1.11.0",
     "visitor-as": "^0.5.0"
   },
   "devDependencies": {
@@ -36,7 +35,8 @@
     "as-proto-gen": "^0.2.5",
     "eslint": "^8.9.0",
     "prettier": "^2.5.1",
-    "typescript": "^4.1.5"
+    "typescript": "^4.1.5",
+    "asbuild": "^0.2.0"
   },
   "exports": {
     ".": {
