@@ -34,7 +34,7 @@ jobs:
 
       - name: Publish bindgen
         run: |
-          cd ../bindgen
+          cd ./bindgen
           yarn add idena-sdk-core@${{steps.tag.outputs.tag}} --legacy-peer-deps
           npm version ${{steps.tag.outputs.tag}} --no-git-tag-version
           yarn build
@@ -42,14 +42,14 @@ jobs:
 
       - name: Publish sdk-tests
         run: |
-          cd ../sdk-tests
+          cd ./sdk-tests
           npm version ${{steps.tag.outputs.tag}} --no-git-tag-version
           yarn build
           npm publish
 
       - name: Publish sdk
         run: |
-          cd ../sdk
+          cd ./sdk
           yarn add idena-sdk-core@${{steps.tag.outputs.tag}} --legacy-peer-deps
           yarn add idena-sdk-bindgen@${{steps.tag.outputs.tag}} --legacy-peer-deps
           yarn add idena-sdk-tests@${{steps.tag.outputs.tag}} --legacy-peer-deps
