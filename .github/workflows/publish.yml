@@ -20,8 +20,8 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
          
       - uses: borales/actions-yarn@v3.0.0
-        with:
-          cmd: install --legacy-peer-deps
+      - run: yarn install --legacy-peer-deps
+        
       - name: Get tag
         id: tag
         uses: dawidd6/action-get-tag@v1
