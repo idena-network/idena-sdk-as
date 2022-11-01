@@ -20,7 +20,8 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
          
       - uses: borales/actions-yarn@v3.0.0
-      - run: yarn install
+        with:
+          cmd: install
     
       - name: Run build script
         run: ./.github/scripts/publish.sh ${{steps.tag.outputs.tag}} 
