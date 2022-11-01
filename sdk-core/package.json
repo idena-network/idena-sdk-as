@@ -20,7 +20,7 @@
   "license": "ISC",
   "dependencies": {
     "asbuild": "^0.2.0",
-    "assemblyscript": "^0.18.25",
+    "assemblyscript": "^0.19.3",
     "assemblyscript-json": "^1.0.0",
     "assemblyscript-temporal": "^1.11.0",
     "as-hex": "^1.0.1",
