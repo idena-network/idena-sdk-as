@@ -2,12 +2,12 @@ name: Publish
 
 on:
   push:
-    tags: 
+    tags:
       - '*'
 
 jobs:
   publish-npm:
-    name: "Publish to npm"
+    name: 'Publish to npm'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -19,8 +19,9 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
+      - run: npm config set legacy-peer-deps true -g
       - run: yarn install --legacy-peer-deps
-      
+
       - name: Get tag
         id: tag
         uses: dawidd6/action-get-tag@v1
