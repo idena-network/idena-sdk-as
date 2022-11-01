@@ -105,12 +105,14 @@ export namespace util {
     }
 
     export function packProtobufArguments(data: Bytes[]): Bytes {
-      let args = new Array<Uint8Array>();
+      let args = new Array<models.ProtoArgs.Argument>();
       for (let i = 0; i < data.length; i++) {
-        args.push(changetype<Uint8Array>(data[i]));
+        args.push(new models.ProtoArgs.Argument(changetype<Uint8Array>(data[i]), data[i]==null));
       }
-      let protoArgs = new models.ProtoCallContractArgs(args);
-      let protoBytes = Protobuf.encode<models.ProtoCallContractArgs>(protoArgs, models.ProtoCallContractArgs.encode);
+
+      let protoArgs = new models.ProtoArgs(args);
+
+      let protoBytes = Protobuf.encode<models.ProtoArgs>(protoArgs, models.ProtoArgs.encode);
       const result = new Bytes(protoBytes.length + 1);
       result[0] = 1; // protobuf format
       memory.copy(result.dataStart + 1, protoBytes.dataStart, protoBytes.length);
