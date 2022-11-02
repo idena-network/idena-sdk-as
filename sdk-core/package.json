@@ -26,17 +26,17 @@
     "assemblyscript": "^0.19.23",
     "assemblyscript-json": "^1.0.0",
     "assemblyscript-temporal": "^1.11.0",
-    "visitor-as": "^0.5.0"
+    "visitor-as": "^0.5.0",
+    "asbuild": "^0.2.0",
+    "@as-pect/cli": "^6.2.4"
   },
-  "devDependencies": {
-    "@as-pect/cli": "^6.2.4",
+  "devDependencies": {    
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.12.0",
     "as-proto-gen": "^0.2.5",
     "eslint": "^8.9.0",
     "prettier": "^2.5.1",
-    "typescript": "^4.1.5",
-    "asbuild": "^0.2.0"
+    "typescript": "^4.1.5"    
   },
   "exports": {
     ".": {
