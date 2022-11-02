@@ -1,5 +1,5 @@
 import { JSONEncoder as _JSONEncoder, JSON } from "assemblyscript-json";
-import { Bytes, env, u256, storage, util, u128, allocate, Address, base64, debug, Balance, balanceToBytes, bytesToBalance } from 'idena-sdk-core';
+import { Bytes, env, u256, storage, util, u128, allocate, Address, base64, debug, Balance} from 'idena-sdk-core';
 // Runtime functions
 // tslint:disable: no-unsafe-any
 /* eslint-disable  @typescript-eslint/no-unused-vars */
@@ -566,7 +566,7 @@ function decodeBytes<T>(buf: Uint8Array): T {
   // @ts-ignore
   if (value instanceof Balance) {
     // @ts-ignore
-    return <T>bytesToBalance(buf);
+    return <T>Balance.fromBytes(buf);
   }
 
    // @ts-ignore
@@ -640,7 +640,7 @@ function encodeToBytes<T>(value: T): Uint8Array {
   // @ts-ignore
   if (value instanceof Balance) {
     // @ts-ignore
-    return balanceToBytes(value as Balance);
+    return (value as Balance).toBytes();
   }
    // @ts-ignore
   if (value instanceof u128) {

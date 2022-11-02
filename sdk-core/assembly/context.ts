@@ -23,7 +23,7 @@ export namespace Context {
   }
 
   export function minFeePerGas(): Balance {
-    return bytesToBalance(util.ptrToBytes(env.minFeePerGas()));
+    return Balance.fromBytes(util.ptrToBytes(env.minFeePerGas()));
   }
 
   export function networkSize(): u64 {
@@ -46,6 +46,6 @@ export namespace Context {
   }
 
   export function payAmount(): Balance {
-    return bytesToBalance(util.ptrToBytes(env.payAmount()));
+    return Balance.fromBytes(util.ptrToBytes(env.payAmount()));
   }
 }

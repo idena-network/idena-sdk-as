@@ -1,4 +1,4 @@
-import { util, env, Bytes, Address, Balance, balanceToBytes } from 'idena-sdk-core';
+import { util, env, Bytes, Address, Balance } from 'idena-sdk-core';
 import {Region} from './region';
 import {allocate} from './allocate';
 
@@ -18,7 +18,7 @@ export class PromiseId {
       this.idx,
       util.strToPtr(method),
       util.bytesToPtr(util.packProtobufArguments(args)),
-      util.bytesToPtr(balanceToBytes(deposit)),
+      util.bytesToPtr(deposit.toBytes()),
       gasLimit
     );
   }
@@ -80,7 +80,7 @@ export namespace Host {
       util.bytesToPtr(contract),
       util.strToPtr(method),
       util.bytesToPtr(util.packProtobufArguments(args)),
-      util.bytesToPtr(balanceToBytes(deposit)),
+      util.bytesToPtr(deposit.toBytes()),
       gasLimit
     );
     return new PromiseId(idx);
@@ -97,7 +97,7 @@ export namespace Host {
       util.bytesToPtr(code),
       util.bytesToPtr(util.packProtobufArguments(args)),
       util.bytesToPtr(nonce),
-      util.bytesToPtr(balanceToBytes(deposit)),
+      util.bytesToPtr(deposit.toBytes()),
       gasLimit
     );
     return new PromiseId(idx);
@@ -106,7 +106,7 @@ export namespace Host {
   export function createTransferPromise(to: Address, amount: Balance): void {
     env.createTransferPromise(
       util.bytesToPtr(to),
-      util.bytesToPtr(balanceToBytes(amount))
+      util.bytesToPtr(amount.toBytes())
     );
   }
 

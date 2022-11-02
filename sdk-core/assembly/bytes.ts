@@ -123,6 +123,10 @@ export class Bytes extends Uint8Array {
     return changetype<Bytes>(bs);
   }
 
+  static fromu128(n : u128) : Bytes{
+    return Bytes.fromBytes(n.toUint8Array(false));
+  }
+
   static fromString(v: string): Bytes {
     return changetype<Bytes>(util.stringToBytes(v));
   }
