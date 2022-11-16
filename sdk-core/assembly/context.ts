@@ -1,12 +1,12 @@
 
-import {Bytes, env, util, Balance, Address, bytesToBalance} from 'idena-sdk-core';
+import {Bytes, env, util, Balance, Address} from 'idena-sdk-core';
 
 export namespace Context {
   export function caller(): Address {
     return Address.fromBytes(util.ptrToBytes(env.caller()));
   }
 
-  export function originlCaller(): Address {
+  export function originalCaller(): Address {
     return Address.fromBytes(util.ptrToBytes(env.originalCaller()));
   }
 

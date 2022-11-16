@@ -103,13 +103,55 @@ export namespace models {
     }
   }
 
+  export class Argument {
+    static encode(message: Argument, writer: Writer): void {
+      writer.uint32(10);
+      writer.bytes(message.value);
+
+      writer.uint32(16);
+      writer.bool(message.is_nil);
+    }
+
+    static decode(reader: Reader, length: i32): Argument {
+      const end: usize = length < 0 ? reader.end : reader.ptr + length;
+      const message = new Argument();
+
+      while (reader.ptr < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1:
+            message.value = reader.bytes();
+            break;
+
+          case 2:
+            message.is_nil = reader.bool();
+            break;
+
+          default:
+            reader.skipType(tag & 7);
+            break;
+        }
+      }
+
+      return message;
+    }
+
+    value: Uint8Array;
+    is_nil: bool;
+
+    constructor(value: Uint8Array = new Uint8Array(0), is_nil: bool = false) {
+      this.value = value;
+      this.is_nil = is_nil;
+    }
+  }
+
   export class ProtoArgs {
     static encode(message: ProtoArgs, writer: Writer): void {
       const args = message.args;
       for (let i = 0; i < args.length; ++i) {
         writer.uint32(10);
         writer.fork();
-        models.ProtoArgs.Argument.encode(args[i], writer);
+        models.Argument.encode(args[i], writer);
         writer.ldelim();
       }
     }
@@ -122,9 +164,7 @@ export namespace models {
         const tag = reader.uint32();
         switch (tag >>> 3) {
           case 1:
-            message.args.push(
-              models.ProtoArgs.Argument.decode(reader, reader.uint32())
-            );
+            message.args.push(models.Argument.decode(reader, reader.uint32()));
             break;
 
           default:
@@ -136,54 +176,10 @@ export namespace models {
       return message;
     }
 
-    args: Array<models.ProtoArgs.Argument>;
+    args: Array<models.Argument>;
 
-    constructor(args: Array<models.ProtoArgs.Argument> = []) {
+    constructor(args: Array<models.Argument> = []) {
       this.args = args;
-    }
-  }
-
-  export namespace ProtoArgs {
-    export class Argument {
-      static encode(message: Argument, writer: Writer): void {
-        writer.uint32(10);
-        writer.bytes(message.value);
-
-        writer.uint32(16);
-        writer.bool(message.is_nil);
-      }
-
-      static decode(reader: Reader, length: i32): Argument {
-        const end: usize = length < 0 ? reader.end : reader.ptr + length;
-        const message = new Argument();
-
-        while (reader.ptr < end) {
-          const tag = reader.uint32();
-          switch (tag >>> 3) {
-            case 1:
-              message.value = reader.bytes();
-              break;
-
-            case 2:
-              message.is_nil = reader.bool();
-              break;
-
-            default:
-              reader.skipType(tag & 7);
-              break;
-          }
-        }
-
-        return message;
-      }
-
-      value: Uint8Array;
-      is_nil: bool;
-
-      constructor(value: Uint8Array = new Uint8Array(0), is_nil: bool = false) {
-        this.value = value;
-        this.is_nil = is_nil;
-      }
     }
   }
 }

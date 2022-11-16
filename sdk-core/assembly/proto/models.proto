@@ -14,11 +14,11 @@ message ProtoTransactionIndex {
     uint32 idx = 2;
 }
 
-message ProtoArgs {
-  repeated Argument args = 1;
-
-  message Argument {
+message Argument {
     bytes value = 1;
     bool is_nil = 2;
   }
+  
+message ProtoArgs {
+  repeated Argument args = 1;  
 }
