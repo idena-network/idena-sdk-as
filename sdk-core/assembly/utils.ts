@@ -105,9 +105,9 @@ export namespace util {
     }
 
     export function packProtobufArguments(data: Bytes[]): Bytes {
-      let args = new Array<models.ProtoArgs.Argument>();
+      let args = new Array<models.Argument>();
       for (let i = 0; i < data.length; i++) {
-        args.push(new models.ProtoArgs.Argument(changetype<Uint8Array>(data[i]), data[i]==null));
+        args.push(new models.Argument(changetype<Uint8Array>(data[i]), data[i]==null));
       }
 
       let protoArgs = new models.ProtoArgs(args);
