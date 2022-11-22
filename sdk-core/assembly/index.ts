@@ -15,3 +15,4 @@ export * from './context';
 export * from './base64';
 export * from './host';
 export * from './balance';
+export * from './proto/models';
