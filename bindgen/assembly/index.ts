@@ -1,4 +1,4 @@
-import { JSONEncoder as _JSONEncoder, JSON } from "assemblyscript-json";
+import { JSONEncoder as _JSONEncoder, JSON } from "idena-assemblyscript-json";
 import { Bytes, env, u256, storage, util, u128, allocate, Address, base64, debug, Balance} from 'idena-sdk-core';
 // Runtime functions
 // tslint:disable: no-unsafe-any
@@ -602,7 +602,6 @@ function decodeBytes<T>(buf: Uint8Array): T {
 
 function encodeToBytes<T>(value: T): Uint8Array {  
   const valType = nameof<T>();
-  debug(`encode to bytes type=${valType}`);
   if (isInteger<T>()) {      
     if (value instanceof u8) {
       // @ts-ignore

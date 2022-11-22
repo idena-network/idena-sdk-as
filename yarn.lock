@@ -2238,11 +2238,6 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
-assemblyscript-json@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/assemblyscript-json/-/assemblyscript-json-1.0.0.tgz"
-  integrity sha512-Cv96RESaVbCJn6jqVPXJlrClb3ZoLwcoSNFPDpHMXxi7NqLBeUGhV6zitSjLIgPHXVocIuYYH+SnykzEtErrBg==
-
 assemblyscript-regex@^1.6.3:
   version "1.6.3"
   resolved "https://registry.npmjs.org/assemblyscript-regex/-/assemblyscript-regex-1.6.3.tgz"
@@ -4534,6 +4529,11 @@ iconv-lite@^0.6.2:
   integrity sha512-2y91h5OpQlolefMPmUlivelittSWy0rP+oYVpn6A7GwVHNE8AWzoYOBNmlwks3LobaJxgHCYZAnyNo2GgpNRNQ==
   dependencies:
     safer-buffer ">= 2.1.2 < 3.0.0"
+
+idena-assemblyscript-json@^0.0.1:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/idena-assemblyscript-json/-/idena-assemblyscript-json-0.0.2.tgz#a26241e0006038a21c66cbc45d05a765e29f3225"
+  integrity sha512-j4JjBX/cLvIVliqdW1nERzsjFUPDSJ08axkj4Zuvbc9aAv1y0zGEdF0hRvWyFEJMGLzjjFD3H9btqIHF1B/neA==
 
 idena-sdk-js@^0.1.0:
   version "0.1.0"

@@ -1,3 +1,3 @@
-import { JSON } from "assemblyscript-json";
+import { JSON } from "idena-assemblyscript-json";
 
 export { JSON };

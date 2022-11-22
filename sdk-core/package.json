@@ -24,7 +24,7 @@
     "as-hex": "^1.0.1",
     "as-proto": "^0.2.5",   
     "assemblyscript": "^0.19.23",
-    "assemblyscript-json": "^1.0.0",
+    "idena-assemblyscript-json": "^0.0.2",
     "assemblyscript-temporal": "^1.11.0",
     "visitor-as": "^0.5.0",
     "asbuild": "^0.2.0",

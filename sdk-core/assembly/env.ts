@@ -47,20 +47,7 @@ export namespace env {
     // @ts-ignore
     @external("env", "network_size")
     // Reads current network size
-    export declare function networkSize(): u64
-
-    // @ts-ignore
-    @external("env", "identity")
-    /**
-     * Reads full protobuf model of identity
-     * @returns pointer to region with binary data, 0 if identity doesn't exist
-     */
-    export declare function identity(addr: usize): i32
-
-    // @ts-ignore
-    @external("env", "identity_state")
-    // Reads identity status by address
-    export declare function identityState(addr: usize): i32
+    export declare function networkSize(): u64    
 
     // @ts-ignore
     @external("env", "caller")
@@ -109,12 +96,7 @@ export namespace env {
     // @ts-ignore
     @external("env", "own_addr")
     // Reads address of current contract
-    export declare function contract(): usize
-
-    // @ts-ignore
-    @external("env", "balance")
-    // Reads balance of addr
-    export declare function balance(addr: usize): i32
+    export declare function contract(): usize    
 
     @external("env", "code_hash")
     export declare function codeHash() : usize
