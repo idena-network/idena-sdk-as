@@ -1,5 +1,4 @@
-import { util, env, Bytes, Address, Balance } from 'idena-sdk-core';
-import {Region} from './region';
+import {util, env, Bytes, Address, Balance} from 'idena-sdk-core';
 import {allocate} from './allocate';
 
 const PROMISE_FAILED = 0;
@@ -131,12 +130,15 @@ export namespace Host {
     return new PromiseId(idx);
   }
 
-  export function promiseResult(
-    maxDataSize: u32 = DEFAULT_MAX_DATA_SIZE
-  ): PromiseResult {
-    let r = allocate(maxDataSize);
-    let status = env.promiseResult(r);
-    return new PromiseResult(util.ptrToBytes(r), status);
+  export function promiseResult(): PromiseResult {
+    let statusPtr = allocate(1);
+    let result = env.promiseResult(statusPtr);
+    let statusBytes = util.ptrToBytes(statusPtr);
+
+    return new PromiseResult(
+      util.ptrToBytes(result),
+      statusBytes.length > 0 ? statusBytes[0] : 0
+    );
   }
 
   export function contractAddressByHash(
@@ -155,7 +157,10 @@ export namespace Host {
     );
   }
 
-  export function emitEvent(eventName : string, args: Bytes[]) : void {
-    env.emitEvent(util.strToPtr(eventName), util.bytesToPtr(util.packProtobufArguments(args)));
+  export function emitEvent(eventName: string, args: Bytes[]): void {
+    env.emitEvent(
+      util.strToPtr(eventName),
+      util.bytesToPtr(util.packProtobufArguments(args))
+    );
   }
 }

@@ -11,11 +11,95 @@ export namespace models {
       writer.uint32(10);
       writer.bytes(message.stake);
 
+      writer.uint32(16);
+      writer.uint32(message.invites);
+
       writer.uint32(24);
       writer.uint32(message.birthday);
 
       writer.uint32(32);
       writer.uint32(message.state);
+
+      writer.uint32(40);
+      writer.uint32(message.qualifiedFlips);
+
+      writer.uint32(48);
+      writer.uint32(message.shortFlipPoints);
+
+      writer.uint32(58);
+      writer.bytes(message.pubKey);
+
+      writer.uint32(64);
+      writer.uint32(message.requiredFlips);
+
+      const flips = message.flips;
+      for (let i = 0; i < flips.length; ++i) {
+        writer.uint32(74);
+        writer.fork();
+        models.ProtoStateIdentity.Flip.encode(flips[i], writer);
+        writer.ldelim();
+      }
+
+      writer.uint32(80);
+      writer.uint32(message.generation);
+
+      writer.uint32(90);
+      writer.bytes(message.code);
+
+      const invitees = message.invitees;
+      for (let i = 0; i < invitees.length; ++i) {
+        writer.uint32(98);
+        writer.fork();
+        models.ProtoStateIdentity.TxAddr.encode(invitees[i], writer);
+        writer.ldelim();
+      }
+
+      const inviter = message.inviter;
+      if (inviter !== null) {
+        writer.uint32(106);
+        writer.fork();
+        models.ProtoStateIdentity.Inviter.encode(inviter, writer);
+        writer.ldelim();
+      }
+
+      writer.uint32(114);
+      writer.bytes(message.penalty);
+
+      writer.uint32(120);
+      writer.uint32(message.validationBits);
+
+      writer.uint32(128);
+      writer.uint32(message.validationStatus);
+
+      writer.uint32(138);
+      writer.bytes(message.profileHash);
+
+      writer.uint32(146);
+      writer.bytes(message.scores);
+
+      writer.uint32(154);
+      writer.bytes(message.delegatee);
+
+      writer.uint32(160);
+      writer.uint32(message.delegationNonce);
+
+      writer.uint32(168);
+      writer.uint32(message.delegationEpoch);
+
+      writer.uint32(176);
+      writer.uint32(message.shardId);
+
+      writer.uint32(184);
+      writer.bool(message.pendingUndelegation);
+
+      writer.uint32(194);
+      writer.bytes(message.replenishedStake);
+
+      writer.uint32(200);
+      writer.uint32(message.penaltySeconds);
+
+      writer.uint32(208);
+      writer.int64(message.penaltyTimestamp);
     }
 
     static decode(reader: Reader, length: i32): ProtoStateIdentity {
@@ -29,12 +113,111 @@ export namespace models {
             message.stake = reader.bytes();
             break;
 
+          case 2:
+            message.invites = reader.uint32();
+            break;
+
           case 3:
             message.birthday = reader.uint32();
             break;
 
           case 4:
             message.state = reader.uint32();
+            break;
+
+          case 5:
+            message.qualifiedFlips = reader.uint32();
+            break;
+
+          case 6:
+            message.shortFlipPoints = reader.uint32();
+            break;
+
+          case 7:
+            message.pubKey = reader.bytes();
+            break;
+
+          case 8:
+            message.requiredFlips = reader.uint32();
+            break;
+
+          case 9:
+            message.flips.push(
+              models.ProtoStateIdentity.Flip.decode(reader, reader.uint32())
+            );
+            break;
+
+          case 10:
+            message.generation = reader.uint32();
+            break;
+
+          case 11:
+            message.code = reader.bytes();
+            break;
+
+          case 12:
+            message.invitees.push(
+              models.ProtoStateIdentity.TxAddr.decode(reader, reader.uint32())
+            );
+            break;
+
+          case 13:
+            message.inviter = models.ProtoStateIdentity.Inviter.decode(
+              reader,
+              reader.uint32()
+            );
+            break;
+
+          case 14:
+            message.penalty = reader.bytes();
+            break;
+
+          case 15:
+            message.validationBits = reader.uint32();
+            break;
+
+          case 16:
+            message.validationStatus = reader.uint32();
+            break;
+
+          case 17:
+            message.profileHash = reader.bytes();
+            break;
+
+          case 18:
+            message.scores = reader.bytes();
+            break;
+
+          case 19:
+            message.delegatee = reader.bytes();
+            break;
+
+          case 20:
+            message.delegationNonce = reader.uint32();
+            break;
+
+          case 21:
+            message.delegationEpoch = reader.uint32();
+            break;
+
+          case 22:
+            message.shardId = reader.uint32();
+            break;
+
+          case 23:
+            message.pendingUndelegation = reader.bool();
+            break;
+
+          case 24:
+            message.replenishedStake = reader.bytes();
+            break;
+
+          case 25:
+            message.penaltySeconds = reader.uint32();
+            break;
+
+          case 26:
+            message.penaltyTimestamp = reader.int64();
             break;
 
           default:
@@ -47,139 +230,230 @@ export namespace models {
     }
 
     stake: Uint8Array;
+    invites: u32;
     birthday: u32;
     state: u32;
+    qualifiedFlips: u32;
+    shortFlipPoints: u32;
+    pubKey: Uint8Array;
+    requiredFlips: u32;
+    flips: Array<models.ProtoStateIdentity.Flip>;
+    generation: u32;
+    code: Uint8Array;
+    invitees: Array<models.ProtoStateIdentity.TxAddr>;
+    inviter: models.ProtoStateIdentity.Inviter | null;
+    penalty: Uint8Array;
+    validationBits: u32;
+    validationStatus: u32;
+    profileHash: Uint8Array;
+    scores: Uint8Array;
+    delegatee: Uint8Array;
+    delegationNonce: u32;
+    delegationEpoch: u32;
+    shardId: u32;
+    pendingUndelegation: bool;
+    replenishedStake: Uint8Array;
+    penaltySeconds: u32;
+    penaltyTimestamp: i64;
 
     constructor(
       stake: Uint8Array = new Uint8Array(0),
+      invites: u32 = 0,
       birthday: u32 = 0,
-      state: u32 = 0
+      state: u32 = 0,
+      qualifiedFlips: u32 = 0,
+      shortFlipPoints: u32 = 0,
+      pubKey: Uint8Array = new Uint8Array(0),
+      requiredFlips: u32 = 0,
+      flips: Array<models.ProtoStateIdentity.Flip> = [],
+      generation: u32 = 0,
+      code: Uint8Array = new Uint8Array(0),
+      invitees: Array<models.ProtoStateIdentity.TxAddr> = [],
+      inviter: models.ProtoStateIdentity.Inviter | null = null,
+      penalty: Uint8Array = new Uint8Array(0),
+      validationBits: u32 = 0,
+      validationStatus: u32 = 0,
+      profileHash: Uint8Array = new Uint8Array(0),
+      scores: Uint8Array = new Uint8Array(0),
+      delegatee: Uint8Array = new Uint8Array(0),
+      delegationNonce: u32 = 0,
+      delegationEpoch: u32 = 0,
+      shardId: u32 = 0,
+      pendingUndelegation: bool = false,
+      replenishedStake: Uint8Array = new Uint8Array(0),
+      penaltySeconds: u32 = 0,
+      penaltyTimestamp: i64 = 0
     ) {
       this.stake = stake;
+      this.invites = invites;
       this.birthday = birthday;
       this.state = state;
+      this.qualifiedFlips = qualifiedFlips;
+      this.shortFlipPoints = shortFlipPoints;
+      this.pubKey = pubKey;
+      this.requiredFlips = requiredFlips;
+      this.flips = flips;
+      this.generation = generation;
+      this.code = code;
+      this.invitees = invitees;
+      this.inviter = inviter;
+      this.penalty = penalty;
+      this.validationBits = validationBits;
+      this.validationStatus = validationStatus;
+      this.profileHash = profileHash;
+      this.scores = scores;
+      this.delegatee = delegatee;
+      this.delegationNonce = delegationNonce;
+      this.delegationEpoch = delegationEpoch;
+      this.shardId = shardId;
+      this.pendingUndelegation = pendingUndelegation;
+      this.replenishedStake = replenishedStake;
+      this.penaltySeconds = penaltySeconds;
+      this.penaltyTimestamp = penaltyTimestamp;
     }
   }
 
-  export class ProtoTransactionIndex {
-    static encode(message: ProtoTransactionIndex, writer: Writer): void {
-      writer.uint32(10);
-      writer.bytes(message.blockHash);
-
-      writer.uint32(16);
-      writer.uint32(message.idx);
-    }
-
-    static decode(reader: Reader, length: i32): ProtoTransactionIndex {
-      const end: usize = length < 0 ? reader.end : reader.ptr + length;
-      const message = new ProtoTransactionIndex();
-
-      while (reader.ptr < end) {
-        const tag = reader.uint32();
-        switch (tag >>> 3) {
-          case 1:
-            message.blockHash = reader.bytes();
-            break;
-
-          case 2:
-            message.idx = reader.uint32();
-            break;
-
-          default:
-            reader.skipType(tag & 7);
-            break;
-        }
-      }
-
-      return message;
-    }
-
-    blockHash: Uint8Array;
-    idx: u32;
-
-    constructor(blockHash: Uint8Array = new Uint8Array(0), idx: u32 = 0) {
-      this.blockHash = blockHash;
-      this.idx = idx;
-    }
-  }
-
-  export class Argument {
-    static encode(message: Argument, writer: Writer): void {
-      writer.uint32(10);
-      writer.bytes(message.value);
-
-      writer.uint32(16);
-      writer.bool(message.is_nil);
-    }
-
-    static decode(reader: Reader, length: i32): Argument {
-      const end: usize = length < 0 ? reader.end : reader.ptr + length;
-      const message = new Argument();
-
-      while (reader.ptr < end) {
-        const tag = reader.uint32();
-        switch (tag >>> 3) {
-          case 1:
-            message.value = reader.bytes();
-            break;
-
-          case 2:
-            message.is_nil = reader.bool();
-            break;
-
-          default:
-            reader.skipType(tag & 7);
-            break;
-        }
-      }
-
-      return message;
-    }
-
-    value: Uint8Array;
-    is_nil: bool;
-
-    constructor(value: Uint8Array = new Uint8Array(0), is_nil: bool = false) {
-      this.value = value;
-      this.is_nil = is_nil;
-    }
-  }
-
-  export class ProtoArgs {
-    static encode(message: ProtoArgs, writer: Writer): void {
-      const args = message.args;
-      for (let i = 0; i < args.length; ++i) {
+  export namespace ProtoStateIdentity {
+    export class Flip {
+      static encode(message: Flip, writer: Writer): void {
         writer.uint32(10);
-        writer.fork();
-        models.Argument.encode(args[i], writer);
-        writer.ldelim();
+        writer.bytes(message.cid);
+
+        writer.uint32(16);
+        writer.uint32(message.pair);
       }
-    }
 
-    static decode(reader: Reader, length: i32): ProtoArgs {
-      const end: usize = length < 0 ? reader.end : reader.ptr + length;
-      const message = new ProtoArgs();
+      static decode(reader: Reader, length: i32): Flip {
+        const end: usize = length < 0 ? reader.end : reader.ptr + length;
+        const message = new Flip();
 
-      while (reader.ptr < end) {
-        const tag = reader.uint32();
-        switch (tag >>> 3) {
-          case 1:
-            message.args.push(models.Argument.decode(reader, reader.uint32()));
-            break;
+        while (reader.ptr < end) {
+          const tag = reader.uint32();
+          switch (tag >>> 3) {
+            case 1:
+              message.cid = reader.bytes();
+              break;
 
-          default:
-            reader.skipType(tag & 7);
-            break;
+            case 2:
+              message.pair = reader.uint32();
+              break;
+
+            default:
+              reader.skipType(tag & 7);
+              break;
+          }
         }
+
+        return message;
       }
 
-      return message;
+      cid: Uint8Array;
+      pair: u32;
+
+      constructor(cid: Uint8Array = new Uint8Array(0), pair: u32 = 0) {
+        this.cid = cid;
+        this.pair = pair;
+      }
     }
 
-    args: Array<models.Argument>;
+    export class TxAddr {
+      static encode(message: TxAddr, writer: Writer): void {
+        writer.uint32(10);
+        writer.bytes(message.hash);
 
-    constructor(args: Array<models.Argument> = []) {
-      this.args = args;
+        writer.uint32(18);
+        writer.bytes(message.address);
+      }
+
+      static decode(reader: Reader, length: i32): TxAddr {
+        const end: usize = length < 0 ? reader.end : reader.ptr + length;
+        const message = new TxAddr();
+
+        while (reader.ptr < end) {
+          const tag = reader.uint32();
+          switch (tag >>> 3) {
+            case 1:
+              message.hash = reader.bytes();
+              break;
+
+            case 2:
+              message.address = reader.bytes();
+              break;
+
+            default:
+              reader.skipType(tag & 7);
+              break;
+          }
+        }
+
+        return message;
+      }
+
+      hash: Uint8Array;
+      address: Uint8Array;
+
+      constructor(
+        hash: Uint8Array = new Uint8Array(0),
+        address: Uint8Array = new Uint8Array(0)
+      ) {
+        this.hash = hash;
+        this.address = address;
+      }
+    }
+
+    export class Inviter {
+      static encode(message: Inviter, writer: Writer): void {
+        writer.uint32(10);
+        writer.bytes(message.hash);
+
+        writer.uint32(18);
+        writer.bytes(message.address);
+
+        writer.uint32(24);
+        writer.uint32(message.epochHeight);
+      }
+
+      static decode(reader: Reader, length: i32): Inviter {
+        const end: usize = length < 0 ? reader.end : reader.ptr + length;
+        const message = new Inviter();
+
+        while (reader.ptr < end) {
+          const tag = reader.uint32();
+          switch (tag >>> 3) {
+            case 1:
+              message.hash = reader.bytes();
+              break;
+
+            case 2:
+              message.address = reader.bytes();
+              break;
+
+            case 3:
+              message.epochHeight = reader.uint32();
+              break;
+
+            default:
+              reader.skipType(tag & 7);
+              break;
+          }
+        }
+
+        return message;
+      }
+
+      hash: Uint8Array;
+      address: Uint8Array;
+      epochHeight: u32;
+
+      constructor(
+        hash: Uint8Array = new Uint8Array(0),
+        address: Uint8Array = new Uint8Array(0),
+        epochHeight: u32 = 0
+      ) {
+        this.hash = hash;
+        this.address = address;
+        this.epochHeight = epochHeight;
+      }
     }
   }
 }

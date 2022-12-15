@@ -88,10 +88,10 @@ export namespace env {
     @external("env", "promise_result")
     /**
     Reads value of promise.
-    @param result contains binary data of value.
-    @returns status of promise result. 0 - failed, 1 - empty value, 2 - some value
+    @param status of promise result. 0 - failed, 1 - empty value, 2 - some value
+    @returns pointer to data, 0 if there's no data
     */
-    export declare function promiseResult(result : usize): i32
+    export declare function promiseResult(status : usize): i32
 
     // @ts-ignore
     @external("env", "own_addr")

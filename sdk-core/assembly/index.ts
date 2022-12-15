@@ -16,3 +16,4 @@ export * from './base64';
 export * from './host';
 export * from './balance';
 export * from './proto/models';
+export * from './proto/callargs';

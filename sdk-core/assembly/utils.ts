@@ -1,6 +1,6 @@
 import {Bytes} from "./bytes";
 import {Protobuf} from "as-proto";
-import {models} from "./proto/models";
+import {Argument, ProtoArgs} from "./proto/callargs";
 import {Region} from "./region";
 import {env} from "./env";
 import {u128} from "./index";
@@ -105,14 +105,14 @@ export namespace util {
     }
 
     export function packProtobufArguments(data: Bytes[]): Bytes {
-      let args = new Array<models.Argument>();
+      let args = new Array<Argument>();
       for (let i = 0; i < data.length; i++) {
-        args.push(new models.Argument(changetype<Uint8Array>(data[i]), data[i]==null));
+        args.push(new Argument(changetype<Uint8Array>(data[i]), data[i]==null));
       }
 
-      let protoArgs = new models.ProtoArgs(args);
+      let protoArgs = new ProtoArgs(args);
 
-      let protoBytes = Protobuf.encode<models.ProtoArgs>(protoArgs, models.ProtoArgs.encode);
+      let protoBytes = Protobuf.encode<ProtoArgs>(protoArgs, ProtoArgs.encode);
       const result = new Bytes(protoBytes.length + 1);
       result[0] = 1; // protobuf format
       memory.copy(result.dataStart + 1, protoBytes.dataStart, protoBytes.length);

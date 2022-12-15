@@ -3,22 +3,48 @@ package models;
 
 //protoc --plugin=protoc-gen-as=/d/Projects/idena/idena-sdk-as/node_modules/.bin/as-proto-gen.cmd assembly/proto/models.proto --as_out=.
 
-message ProtoStateIdentity {    
-    bytes stake = 1;  
+message ProtoStateIdentity {
+
+    message Flip {
+        bytes cid = 1;
+        uint32 pair = 2;
+    }
+
+    message TxAddr {
+        bytes hash = 1;
+        bytes address = 2;
+    }
+
+    message Inviter {
+        bytes hash = 1;
+        bytes address = 2;
+        uint32 epochHeight = 3;
+    }
+
+    bytes stake = 1;
+    uint32 invites = 2;
     uint32 birthday = 3;
-    uint32 state = 4;  
-}
-
-message ProtoTransactionIndex {
-    bytes blockHash = 1;
-    uint32 idx = 2;
-}
-
-message Argument {
-    bytes value = 1;
-    bool is_nil = 2;
-  }
-  
-message ProtoArgs {
-  repeated Argument args = 1;  
+    uint32 state = 4;
+    uint32 qualifiedFlips = 5;
+    uint32 shortFlipPoints = 6;
+    bytes pubKey = 7;
+    uint32 requiredFlips = 8;
+    repeated Flip flips = 9;
+    uint32 generation = 10;
+    bytes code = 11;
+    repeated TxAddr invitees = 12;
+    Inviter inviter = 13;
+    bytes penalty = 14;
+    uint32 validationBits = 15;
+    uint32 validationStatus = 16;
+    bytes profileHash = 17;
+    bytes scores = 18;
+    bytes delegatee = 19;
+    uint32 delegationNonce = 20;
+    uint32 delegationEpoch = 21;
+    uint32 shardId = 22;
+    bool pendingUndelegation = 23;
+    bytes replenishedStake = 24;
+    uint32 penaltySeconds = 25;
+    int64 penaltyTimestamp = 26;
 }
