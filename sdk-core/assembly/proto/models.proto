@@ -1,7 +1,7 @@
 syntax = "proto3";
 package models;
 
-//protoc --plugin=protoc-gen-as=/d/Projects/idena/idena-sdk-as/node_modules/.bin/as-proto-gen.cmd assembly/proto/models.proto --as_out=.
+//protoc --plugin=protoc-gen-as=d:/Projects/idena/idena-sdk-as/node_modules/.bin/as-proto-gen.cmd sdk-core/assembly/proto/models.proto --as_out=.
 
 message ProtoStateIdentity {
 
@@ -47,4 +47,38 @@ message ProtoStateIdentity {
     bytes replenishedStake = 24;
     uint32 penaltySeconds = 25;
     int64 penaltyTimestamp = 26;
+}
+
+message ProtoBlockHeader {
+    message Proposed {
+        bytes parentHash = 1;
+        uint64 height = 2;
+        int64 timestamp = 3;
+        bytes txHash = 4;
+        bytes proposerPubKey = 5;
+        bytes root = 6;
+        bytes identityRoot = 7;
+        uint32 flags = 8;
+        bytes ipfsHash = 9;
+        bytes offlineAddr = 10;
+        bytes txBloom = 11;
+        bytes blockSeed = 12;
+        bytes feePerGas = 13;
+        uint32 upgrade = 14;
+        bytes seedProof = 15;
+        bytes receiptsCid = 16;
+    }
+
+    message Empty {
+        bytes parentHash = 1;
+        uint64 height = 2;
+        bytes root = 3;
+        bytes identityRoot = 4;
+        int64 timestamp = 5;
+        bytes blockSeed = 6;
+        uint32 flags = 7;
+    }
+
+    Proposed proposedHeader = 1;
+    Empty emptyHeader = 2;
 }

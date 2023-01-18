@@ -1,5 +1,5 @@
-import {Bytes} from "./bytes";
-import {util} from "./utils";
+import {Bytes} from './bytes';
+import {util} from './utils';
 
 export class Address extends Bytes {
   static fromBytes(data: Uint8Array): Address {
@@ -12,5 +12,25 @@ export class Address extends Bytes {
 
   toString(): string {
     return this.toHex();
+  }
+
+  @inline
+  @operator('==')
+  static eq(a: Address, b: Address): bool {
+    if (a.length != b.length) {
+      return false;
+    }
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @inline
+  @operator('!=')
+  static ne(a: Address, b: Address): bool {
+    return !Address.eq(a, b);
   }
 }

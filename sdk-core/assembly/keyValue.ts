@@ -26,7 +26,7 @@ export class KeyValue<K, V> {
     );
   }
 
-  private static _empty(v: i32): bool {
+  private static _empty(v: usize): bool {
     return v == 0;
   }
 

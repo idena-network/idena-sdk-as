@@ -118,4 +118,10 @@ export namespace env {
 
     @external("env", "bytes_to_hex")
     export declare function bytes_to_hex(data: usize) : usize;
+
+    @external("env", "block_header")
+    export declare function blockHeader(height : u64) : usize;
+
+    @external("env", "keccak256")
+    export declare function keccak256(data : usize) : usize;
 }

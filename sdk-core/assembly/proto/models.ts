@@ -456,4 +456,347 @@ export namespace models {
       }
     }
   }
+
+  export class ProtoBlockHeader {
+    static encode(message: ProtoBlockHeader, writer: Writer): void {
+      const proposedHeader = message.proposedHeader;
+      if (proposedHeader !== null) {
+        writer.uint32(10);
+        writer.fork();
+        models.ProtoBlockHeader.Proposed.encode(proposedHeader, writer);
+        writer.ldelim();
+      }
+
+      const emptyHeader = message.emptyHeader;
+      if (emptyHeader !== null) {
+        writer.uint32(18);
+        writer.fork();
+        models.ProtoBlockHeader.Empty.encode(emptyHeader, writer);
+        writer.ldelim();
+      }
+    }
+
+    static decode(reader: Reader, length: i32): ProtoBlockHeader {
+      const end: usize = length < 0 ? reader.end : reader.ptr + length;
+      const message = new ProtoBlockHeader();
+
+      while (reader.ptr < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1:
+            message.proposedHeader = models.ProtoBlockHeader.Proposed.decode(
+              reader,
+              reader.uint32()
+            );
+            break;
+
+          case 2:
+            message.emptyHeader = models.ProtoBlockHeader.Empty.decode(
+              reader,
+              reader.uint32()
+            );
+            break;
+
+          default:
+            reader.skipType(tag & 7);
+            break;
+        }
+      }
+
+      return message;
+    }
+
+    proposedHeader: models.ProtoBlockHeader.Proposed | null;
+    emptyHeader: models.ProtoBlockHeader.Empty | null;
+
+    constructor(
+      proposedHeader: models.ProtoBlockHeader.Proposed | null = null,
+      emptyHeader: models.ProtoBlockHeader.Empty | null = null
+    ) {
+      this.proposedHeader = proposedHeader;
+      this.emptyHeader = emptyHeader;
+    }
+  }
+
+  export namespace ProtoBlockHeader {
+    export class Proposed {
+      static encode(message: Proposed, writer: Writer): void {
+        writer.uint32(10);
+        writer.bytes(message.parentHash);
+
+        writer.uint32(16);
+        writer.uint64(message.height);
+
+        writer.uint32(24);
+        writer.int64(message.timestamp);
+
+        writer.uint32(34);
+        writer.bytes(message.txHash);
+
+        writer.uint32(42);
+        writer.bytes(message.proposerPubKey);
+
+        writer.uint32(50);
+        writer.bytes(message.root);
+
+        writer.uint32(58);
+        writer.bytes(message.identityRoot);
+
+        writer.uint32(64);
+        writer.uint32(message.flags);
+
+        writer.uint32(74);
+        writer.bytes(message.ipfsHash);
+
+        writer.uint32(82);
+        writer.bytes(message.offlineAddr);
+
+        writer.uint32(90);
+        writer.bytes(message.txBloom);
+
+        writer.uint32(98);
+        writer.bytes(message.blockSeed);
+
+        writer.uint32(106);
+        writer.bytes(message.feePerGas);
+
+        writer.uint32(112);
+        writer.uint32(message.upgrade);
+
+        writer.uint32(122);
+        writer.bytes(message.seedProof);
+
+        writer.uint32(130);
+        writer.bytes(message.receiptsCid);
+      }
+
+      static decode(reader: Reader, length: i32): Proposed {
+        const end: usize = length < 0 ? reader.end : reader.ptr + length;
+        const message = new Proposed();
+
+        while (reader.ptr < end) {
+          const tag = reader.uint32();
+          switch (tag >>> 3) {
+            case 1:
+              message.parentHash = reader.bytes();
+              break;
+
+            case 2:
+              message.height = reader.uint64();
+              break;
+
+            case 3:
+              message.timestamp = reader.int64();
+              break;
+
+            case 4:
+              message.txHash = reader.bytes();
+              break;
+
+            case 5:
+              message.proposerPubKey = reader.bytes();
+              break;
+
+            case 6:
+              message.root = reader.bytes();
+              break;
+
+            case 7:
+              message.identityRoot = reader.bytes();
+              break;
+
+            case 8:
+              message.flags = reader.uint32();
+              break;
+
+            case 9:
+              message.ipfsHash = reader.bytes();
+              break;
+
+            case 10:
+              message.offlineAddr = reader.bytes();
+              break;
+
+            case 11:
+              message.txBloom = reader.bytes();
+              break;
+
+            case 12:
+              message.blockSeed = reader.bytes();
+              break;
+
+            case 13:
+              message.feePerGas = reader.bytes();
+              break;
+
+            case 14:
+              message.upgrade = reader.uint32();
+              break;
+
+            case 15:
+              message.seedProof = reader.bytes();
+              break;
+
+            case 16:
+              message.receiptsCid = reader.bytes();
+              break;
+
+            default:
+              reader.skipType(tag & 7);
+              break;
+          }
+        }
+
+        return message;
+      }
+
+      parentHash: Uint8Array;
+      height: u64;
+      timestamp: i64;
+      txHash: Uint8Array;
+      proposerPubKey: Uint8Array;
+      root: Uint8Array;
+      identityRoot: Uint8Array;
+      flags: u32;
+      ipfsHash: Uint8Array;
+      offlineAddr: Uint8Array;
+      txBloom: Uint8Array;
+      blockSeed: Uint8Array;
+      feePerGas: Uint8Array;
+      upgrade: u32;
+      seedProof: Uint8Array;
+      receiptsCid: Uint8Array;
+
+      constructor(
+        parentHash: Uint8Array = new Uint8Array(0),
+        height: u64 = 0,
+        timestamp: i64 = 0,
+        txHash: Uint8Array = new Uint8Array(0),
+        proposerPubKey: Uint8Array = new Uint8Array(0),
+        root: Uint8Array = new Uint8Array(0),
+        identityRoot: Uint8Array = new Uint8Array(0),
+        flags: u32 = 0,
+        ipfsHash: Uint8Array = new Uint8Array(0),
+        offlineAddr: Uint8Array = new Uint8Array(0),
+        txBloom: Uint8Array = new Uint8Array(0),
+        blockSeed: Uint8Array = new Uint8Array(0),
+        feePerGas: Uint8Array = new Uint8Array(0),
+        upgrade: u32 = 0,
+        seedProof: Uint8Array = new Uint8Array(0),
+        receiptsCid: Uint8Array = new Uint8Array(0)
+      ) {
+        this.parentHash = parentHash;
+        this.height = height;
+        this.timestamp = timestamp;
+        this.txHash = txHash;
+        this.proposerPubKey = proposerPubKey;
+        this.root = root;
+        this.identityRoot = identityRoot;
+        this.flags = flags;
+        this.ipfsHash = ipfsHash;
+        this.offlineAddr = offlineAddr;
+        this.txBloom = txBloom;
+        this.blockSeed = blockSeed;
+        this.feePerGas = feePerGas;
+        this.upgrade = upgrade;
+        this.seedProof = seedProof;
+        this.receiptsCid = receiptsCid;
+      }
+    }
+
+    export class Empty {
+      static encode(message: Empty, writer: Writer): void {
+        writer.uint32(10);
+        writer.bytes(message.parentHash);
+
+        writer.uint32(16);
+        writer.uint64(message.height);
+
+        writer.uint32(26);
+        writer.bytes(message.root);
+
+        writer.uint32(34);
+        writer.bytes(message.identityRoot);
+
+        writer.uint32(40);
+        writer.int64(message.timestamp);
+
+        writer.uint32(50);
+        writer.bytes(message.blockSeed);
+
+        writer.uint32(56);
+        writer.uint32(message.flags);
+      }
+
+      static decode(reader: Reader, length: i32): Empty {
+        const end: usize = length < 0 ? reader.end : reader.ptr + length;
+        const message = new Empty();
+
+        while (reader.ptr < end) {
+          const tag = reader.uint32();
+          switch (tag >>> 3) {
+            case 1:
+              message.parentHash = reader.bytes();
+              break;
+
+            case 2:
+              message.height = reader.uint64();
+              break;
+
+            case 3:
+              message.root = reader.bytes();
+              break;
+
+            case 4:
+              message.identityRoot = reader.bytes();
+              break;
+
+            case 5:
+              message.timestamp = reader.int64();
+              break;
+
+            case 6:
+              message.blockSeed = reader.bytes();
+              break;
+
+            case 7:
+              message.flags = reader.uint32();
+              break;
+
+            default:
+              reader.skipType(tag & 7);
+              break;
+          }
+        }
+
+        return message;
+      }
+
+      parentHash: Uint8Array;
+      height: u64;
+      root: Uint8Array;
+      identityRoot: Uint8Array;
+      timestamp: i64;
+      blockSeed: Uint8Array;
+      flags: u32;
+
+      constructor(
+        parentHash: Uint8Array = new Uint8Array(0),
+        height: u64 = 0,
+        root: Uint8Array = new Uint8Array(0),
+        identityRoot: Uint8Array = new Uint8Array(0),
+        timestamp: i64 = 0,
+        blockSeed: Uint8Array = new Uint8Array(0),
+        flags: u32 = 0
+      ) {
+        this.parentHash = parentHash;
+        this.height = height;
+        this.root = root;
+        this.identityRoot = identityRoot;
+        this.timestamp = timestamp;
+        this.blockSeed = blockSeed;
+        this.flags = flags;
+      }
+    }
+  }
 }

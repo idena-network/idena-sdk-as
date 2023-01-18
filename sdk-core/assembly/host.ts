@@ -1,5 +1,7 @@
 import {util, env, Bytes, Address, Balance} from 'idena-sdk-core';
 import {allocate} from './allocate';
+import {models} from './proto/models';
+import {Protobuf} from 'as-proto';
 
 const PROMISE_FAILED = 0;
 const PROMISE_EMTPY = 1;
@@ -55,6 +57,13 @@ export namespace Host {
     if (valuePtr == 0) {
       return defaulValue;
     }
+    return bytes_to_obj<V>(util.ptrToBytes(valuePtr));
+  }
+
+  export function getSome<K, V>(key: K): V {
+    let k = util.bytesToPtr(obj_to_bytes<K>(key));
+    const valuePtr = env.getStorage(k);
+    assert(valuePtr != 0, 'key is not found');
     return bytes_to_obj<V>(util.ptrToBytes(valuePtr));
   }
 
@@ -162,5 +171,17 @@ export namespace Host {
       util.strToPtr(eventName),
       util.bytesToPtr(util.packProtobufArguments(args))
     );
+  }
+
+  export function blockHeader(height: u64): models.ProtoBlockHeader {
+    let data = util.ptrToBytes(env.blockHeader(height));
+    return Protobuf.decode<models.ProtoBlockHeader>(
+      data,
+      models.ProtoBlockHeader.decode
+    );
+  }
+
+  export function keccac256(data: Uint8Array): Bytes {
+    return util.ptrToBytes(env.keccak256(util.bytesToPtr(data)));
   }
 }

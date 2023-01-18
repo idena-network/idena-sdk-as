@@ -1,10 +1,27 @@
 import {u128} from 'idena-sdk-core';
 
 export class Balance {
+
+  @inline static get Zero(): Balance { return new Balance(u128.Zero); }
+
   value: u128;
 
   constructor(value: u128) {
     this.value = value;
+  }
+
+  static min(a : Balance, b : Balance) : Balance {
+    if (a <= b) {
+      return a;
+    }
+    return b;    
+  }
+
+  static max(a : Balance, b : Balance) : Balance {
+    if (a >= b) {
+      return a;
+    }
+    return b;
   }
 
   static from<T>(value: T): Balance {
@@ -30,6 +47,10 @@ export class Balance {
 
   toBytes(): Uint8Array {
     return this.value.toUint8Array(true);
+  }
+
+  toString() : string {
+    return this.value.toString();
   }
 
   @operator('+')

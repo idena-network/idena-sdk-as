@@ -248,9 +248,6 @@ function JSONTypeToString<T>(t: T): string {
   if (t instanceof JSON.Integer) {
     return "Integer";
   }
-  if (t instanceof JSON.Float) {
-    return "Float";
-  }
   return "UNKNOWN TYPE";
 }
 
@@ -324,17 +321,6 @@ function decode<T, V = Uint8Array>(buf: V, name: string = ""): T {
     );
     // @ts-ignore
     return <T>(<JSON.Integer>val)._num;
-  } else if (isFloat<T>()) {
-    assert(
-      val instanceof JSON.Float,
-      "Value with Key: " +
-        name +
-        " with type " +
-        nameof<T>() +
-        " is not a Float"
-    );
-    // @ts-ignore
-    return <T>(<JSON.Float>val)._num;
   }
   if (val instanceof JSON.Null) {
     assert(

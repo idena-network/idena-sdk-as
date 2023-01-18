@@ -300,8 +300,7 @@ ${this.camelCaseToSnakeCaseExport(name)}
   }
 
   private _decode(obj: JSON.Obj): ${className} {
-    ${createDecodeStatements(_class).join('\n    ')}
-    log("invoke _decode for ${_class.name}");
+    ${createDecodeStatements(_class).join('\n    ')}    
     return this;
   }
 
