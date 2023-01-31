@@ -22,7 +22,7 @@ function isNull<T>(t: T): bool {
 
 // @ts-ignore
 @global
-function notPayable1(): void {
+function notPayable(): void {
   return;
 }
 
@@ -114,6 +114,10 @@ function encode<T, Output = Uint8Array>(
           encoder.popArray();
         }
       } else {
+
+        if (value instanceof Balance) {
+          encoder.setString(name, value.toString());
+        }
         // Is an object
         if (value instanceof u128) {
           // @ts-ignore
@@ -420,6 +424,18 @@ function decode<T, V = Uint8Array>(buf: V, name: string = ""): T {
     // @ts-ignore
     return u128.fromString(getStr(val, name));
   }
+   // @ts-ignore
+  if (value instanceof Balance) {
+    assert(
+      val instanceof JSON.Str,
+      "Value with Key: " +
+        name +
+        " expected type string to decode Balance but got " +
+        JSONTypeToString(val)
+    );
+    // @ts-ignore
+    return Balance.fromString(getStr(val, name));
+  }
   throw new Error(
     "Error when trying to decode " +
       name +
@@ -487,7 +503,7 @@ function write_region<T>(value: T) : usize {
 function obj_to_bytes<T>(val: T) : Uint8Array {  
   var data : Uint8Array;
   // @ts-ignore
-  if (isDefined(value.encode)) {
+  if (isDefined(val.encode) || isArrayLike<T>() ) {
     return encode<T>(val);
   } else {  
     return  encodeToBytes(val);
@@ -498,7 +514,7 @@ function obj_to_bytes<T>(val: T) : Uint8Array {
 function bytes_to_obj<T>(data : Bytes) : T {    
   var value : T;
   // @ts-ignore
-  if (isDefined(value.decode)) {
+  if (isDefined(value.decode)  || isArrayLike<T>()) {
     return decode<T>(data);
   }
   return decodeBytes<T>(data);

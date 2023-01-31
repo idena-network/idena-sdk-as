@@ -19,6 +19,7 @@ export class ContractProvider extends BaseProvider {
     amount: string,
     maxFee: string,
     code: Buffer,
+    nonce: Buffer,
     args: ContractArgument[] = null
   ): Promise<string> {
     return await this.doRequest({
@@ -26,6 +27,7 @@ export class ContractProvider extends BaseProvider {
       params: [
         {
           code: toHexString(code),
+          nonce: toHexString(nonce),
           amount: amount,
           args: args,
           maxFee: maxFee,
@@ -109,7 +111,7 @@ export class ContractProvider extends BaseProvider {
     });
   }
 
-  public async events(contract : string) : Promise<string> {
+  public async events(contract: string): Promise<string> {
     return await this.doRequest({
       method: 'contract_events',
       params: [{contract: contract}],
