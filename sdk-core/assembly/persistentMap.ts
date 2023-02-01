@@ -6,8 +6,12 @@ export class PersistentMap<K, V> {
   private _elementPrefix: Bytes;
   
   constructor(
-    prefix: string) {
-    this._elementPrefix = Bytes.fromBytes(util.stringToBytes(prefix));   
+    prefix: Uint8Array) {
+    this._elementPrefix = Bytes.fromBytes(prefix);
+  } 
+
+  static withStringPrefix<K, V>(prefix : string) : PersistentMap<K,V> {
+    return new PersistentMap<K,V>(Bytes.fromBytes(util.stringToBytes(prefix)));
   }
 
   private encodeKey(key: K): usize {    

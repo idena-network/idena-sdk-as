@@ -503,7 +503,7 @@ function write_region<T>(value: T) : usize {
 function obj_to_bytes<T>(val: T) : Uint8Array {  
   var data : Uint8Array;
   // @ts-ignore
-  if (isDefined(val.encode) || isArrayLike<T>() ) {
+  if (isDefined(val.encode) || (isArrayLike<T>() && !(val instanceof Uint8Array))) {
     return encode<T>(val);
   } else {  
     return  encodeToBytes(val);
@@ -514,7 +514,7 @@ function obj_to_bytes<T>(val: T) : Uint8Array {
 function bytes_to_obj<T>(data : Bytes) : T {    
   var value : T;
   // @ts-ignore
-  if (isDefined(value.decode)  || isArrayLike<T>()) {
+  if (isDefined(value.decode)  || (isArrayLike<T>() && !(value instanceof Uint8Array))) {
     return decode<T>(data);
   }
   return decodeBytes<T>(data);
