@@ -500,24 +500,23 @@ function write_region<T>(value: T) : usize {
 
 
 @global
-function obj_to_bytes<T>(val: T) : Uint8Array {  
-  var data : Uint8Array;
-  // @ts-ignore
-  if (isDefined(val.encode) || (isArrayLike<T>() && !(val instanceof Uint8Array))) {
-    return encode<T>(val);
-  } else {  
-    return  encodeToBytes(val);
-  }  
+function obj_to_bytes<T>(val: T) : Uint8Array { 
+  var r = encodeToBytes(val);
+  if (r.success) {
+    return r.value;
+  }
+  return encode<T>(val);  
 }
 
 @global
 function bytes_to_obj<T>(data : Bytes) : T {    
-  var value : T;
-  // @ts-ignore
-  if (isDefined(value.decode)  || (isArrayLike<T>() && !(value instanceof Uint8Array))) {
-    return decode<T>(data);
+
+
+  var r = decodeBytes<T>(data);
+  if (r.success) {
+    return r.value;
   }
-  return decodeBytes<T>(data);
+  return decode<T>(data);    
 }
 
 function ptrToBytes(ptr : usize) : Bytes {
@@ -527,144 +526,159 @@ function ptrToBytes(ptr : usize) : Bytes {
   return util.ptrToBytes(ptr);
 }
 
-function decodeBytes<T>(buf: Uint8Array): T {
+function decodeBytes<T>(buf: Uint8Array): Result<T> {
   var value : T;
   const valType = nameof<T>();
   if (isInteger<T>()) {
       let bytes = Bytes.fromBytes(buf);      
       if (value instanceof u8) {
         // @ts-ignore
-        return <T>bytes.toU8();
+        return new Result(<T>bytes.toU8());
       }
       if (value instanceof u16) {
         // @ts-ignore
-        return <T>bytes.toU16();
+        return new Result(<T>bytes.toU16());
       }
       if (value instanceof u32) {
         // @ts-ignore
-        return <T>bytes.toU32();
+        return new Result(<T>bytes.toU32());
       }
       if (value instanceof u64) {
         // @ts-ignore
-        return <T>bytes.toU64();
+        return new Result(<T>bytes.toU64());
       }
       if (value instanceof i8) {
         // @ts-ignore
-        return <T>bytes.toI8();
+        return new Result(<T>bytes.toI8());
       }
       if (value instanceof i16) {
         // @ts-ignore
-        return <T>bytes.toI16();
+        return new Result(<T>bytes.toI16());
       }
       if (value instanceof i32) {
         // @ts-ignore
-        return <T>bytes.toI32();
+        return new Result(<T>bytes.toI32());
       }
       if (value instanceof i64) {
         // @ts-ignore
-        return <T>bytes.toI64();
+        return new Result(<T>bytes.toI64());
       }
   }
   // @ts-ignore
   if (value instanceof Balance) {
     // @ts-ignore
-    return <T>Balance.fromBytes(buf);
+    return new Result(<T>Balance.fromBytes(buf));
   }
 
    // @ts-ignore
   if (value instanceof u128) {
     // @ts-ignore
-    return <T>u128.fromBytes(buf, false);
+    return new Result(<T>u128.fromBytes(buf, false));
   }
    // @ts-ignore
   if (value instanceof u256) {
     // @ts-ignore
-    return <T>u256.fromBytes(buf, false);
+    return new Result(<T>u256.fromBytes(buf, false));
   }
   // @ts-ignore
   if (value instanceof Address){
     // @ts-ignore
-    return <T>Address.fromBytes(buf);
+    return new Result(<T>Address.fromBytes(buf));
   }
 
   // @ts-ignore
   if (value instanceof Uint8Array){
     // @ts-ignore
-    return changetype<T>(buf);
+    return new Result(changetype<T>(buf));
   }
   if (isString<T>()){
      // @ts-ignore
      return changetype<T>(util.bytesToString(buf));
   }
-  throw new Error(`unsupported type of parameter ${valType}`);
-  // @ts-ignore
-  return  changetype<T>(0);
+    
+  return Result.fail<T>(value);
 }
 
 
-function encodeToBytes<T>(value: T): Uint8Array {  
+function encodeToBytes<T>(value: T): Result<Uint8Array> {  
   const valType = nameof<T>();
   if (isInteger<T>()) {      
     if (value instanceof u8) {
       // @ts-ignore
-      return Bytes.fromU8(value);
+      return  new Result(Bytes.fromU8(value));
     }
     if (value instanceof u16) {
       // @ts-ignore
-      return  Bytes.fromU16(value);
+      return  new Result(Bytes.fromU16(value));
     }
     if (value instanceof u32) {
       // @ts-ignore
-      return Bytes.fromU32(value);
+      return new Result(Bytes.fromU32(value));
     }
     if (value instanceof u64) {
       // @ts-ignore
-      return Bytes.fromU64(value);
+      return new Result(Bytes.fromU64(value));
     }
     if (value instanceof i8) {
       // @ts-ignore
-      return Bytes.fromI8(value);
+      return new Result(Bytes.fromI8(value));
     }
     if (value instanceof i16) {
       // @ts-ignore
-      return Bytes.fromI16(value);
+      return new Result(Bytes.fromI16(value));
     }
     if (value instanceof i32) {
       // @ts-ignore
-      return Bytes.fromI32(value);
+      return new Result(Bytes.fromI32(value));
     }
     if (value instanceof i64) {
       // @ts-ignore
-      return Bytes.fromI64(value);
+      return new Result(Bytes.fromI64(value));
     }
   }
   // @ts-ignore
   if (value instanceof Balance) {
     // @ts-ignore
-    return (value as Balance).toBytes();
+    return new Result((value as Balance).toBytes());
   }
    // @ts-ignore
   if (value instanceof u128) {
     // @ts-ignore
-    return (value as u128).toUint8Array(false);
+    return new Result((value as u128).toUint8Array(false));
   }
    // @ts-ignore
   if (value instanceof u256) {
     // @ts-ignore
-    return (value as u256).toUint8Array(false);
+    return new Result((value as u256).toUint8Array(false));
   }
   // @ts-ignore
   if (value instanceof Uint8Array){
     // @ts-ignore
-    return changetype<Uint8Array>(value);
+    return new Result(changetype<Uint8Array>(value));
   }
   if (isString<T>()){
      // @ts-ignore
-     return util.stringToBytes(value);
-  }
-  throw new Error(`unsupported type of parameter ${valType}`);  
+     return new Result(util.stringToBytes(value));
+  }  
   // @ts-ignore
-  return  changetype<T>(0);
+  return  Result.fail(new Uint8Array(0));
+}
+
+
+class Result<T> {
+  value : T;
+  success : bool;
+  
+  constructor(value : T) {
+    this.value = value;
+    this.success = true;    
+  }
+
+  static fail<T>(value : T) : Result<T> {
+    let r = new Result(value);
+    r.success = false;
+    return r;
+  }
 }
 
 

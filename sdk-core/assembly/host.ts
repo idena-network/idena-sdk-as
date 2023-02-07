@@ -184,4 +184,12 @@ export namespace Host {
   export function keccac256(data: Uint8Array): Bytes {
     return util.ptrToBytes(env.keccak256(util.bytesToPtr(data)));
   }
+
+  export function globalState(): models.ProtoStateGlobal {
+    let data = util.ptrToBytes(env.globalState());
+    return Protobuf.decode<models.ProtoStateGlobal>(
+      data,
+      models.ProtoStateGlobal.decode
+    );
+  }
 }

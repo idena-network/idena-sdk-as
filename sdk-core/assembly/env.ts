@@ -124,4 +124,7 @@ export namespace env {
 
     @external("env", "keccak256")
     export declare function keccak256(data : usize) : usize;
+
+    @external("env", "global_state")
+    export declare function globalState() : usize;
 }

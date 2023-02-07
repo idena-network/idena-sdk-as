@@ -799,4 +799,306 @@ export namespace models {
       }
     }
   }
+
+  export class ProtoStateGlobal {
+    static encode(message: ProtoStateGlobal, writer: Writer): void {
+      writer.uint32(8);
+      writer.uint32(message.epoch);
+
+      writer.uint32(16);
+      writer.int64(message.nextValidationTime);
+
+      writer.uint32(24);
+      writer.uint32(message.validationPeriod);
+
+      writer.uint32(34);
+      writer.bytes(message.godAddress);
+
+      writer.uint32(42);
+      writer.bytes(message.wordsSeed);
+
+      writer.uint32(48);
+      writer.uint64(message.lastSnapshot);
+
+      writer.uint32(56);
+      writer.uint64(message.epochBlock);
+
+      writer.uint32(66);
+      writer.bytes(message.feePerGas);
+
+      writer.uint32(72);
+      writer.uint64(message.vrfProposerThreshold);
+
+      writer.uint32(82);
+      writer.bytes(message.emptyBlocksBits);
+
+      writer.uint32(88);
+      writer.uint32(message.godAddressInvites);
+
+      writer.uint32(96);
+      writer.uint32(message.blocksCntWithoutCeremonialTxs);
+
+      const prevEpochBlocks = message.prevEpochBlocks;
+      if (prevEpochBlocks.length !== 0) {
+        for (let i = 0; i < prevEpochBlocks.length; ++i) {
+          writer.uint32(104);
+          writer.uint64(prevEpochBlocks[i]);
+        }
+      }
+
+      writer.uint32(112);
+      writer.uint32(message.shardsNum);
+
+      const emptyBlocksByShards = message.emptyBlocksByShards;
+      for (let i = 0; i < emptyBlocksByShards.length; ++i) {
+        writer.uint32(122);
+        writer.fork();
+        models.ProtoStateGlobal.EmptyBlocksByShards.encode(
+          emptyBlocksByShards[i],
+          writer
+        );
+        writer.ldelim();
+      }
+
+      const shardSizes = message.shardSizes;
+      for (let i = 0; i < shardSizes.length; ++i) {
+        writer.uint32(130);
+        writer.fork();
+        models.ProtoStateGlobal.ShardSize.encode(shardSizes[i], writer);
+        writer.ldelim();
+      }
+    }
+
+    static decode(reader: Reader, length: i32): ProtoStateGlobal {
+      const end: usize = length < 0 ? reader.end : reader.ptr + length;
+      const message = new ProtoStateGlobal();
+
+      while (reader.ptr < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1:
+            message.epoch = reader.uint32();
+            break;
+
+          case 2:
+            message.nextValidationTime = reader.int64();
+            break;
+
+          case 3:
+            message.validationPeriod = reader.uint32();
+            break;
+
+          case 4:
+            message.godAddress = reader.bytes();
+            break;
+
+          case 5:
+            message.wordsSeed = reader.bytes();
+            break;
+
+          case 6:
+            message.lastSnapshot = reader.uint64();
+            break;
+
+          case 7:
+            message.epochBlock = reader.uint64();
+            break;
+
+          case 8:
+            message.feePerGas = reader.bytes();
+            break;
+
+          case 9:
+            message.vrfProposerThreshold = reader.uint64();
+            break;
+
+          case 10:
+            message.emptyBlocksBits = reader.bytes();
+            break;
+
+          case 11:
+            message.godAddressInvites = reader.uint32();
+            break;
+
+          case 12:
+            message.blocksCntWithoutCeremonialTxs = reader.uint32();
+            break;
+
+          case 13:
+            message.prevEpochBlocks.push(reader.uint64());
+            break;
+
+          case 14:
+            message.shardsNum = reader.uint32();
+            break;
+
+          case 15:
+            message.emptyBlocksByShards.push(
+              models.ProtoStateGlobal.EmptyBlocksByShards.decode(
+                reader,
+                reader.uint32()
+              )
+            );
+            break;
+
+          case 16:
+            message.shardSizes.push(
+              models.ProtoStateGlobal.ShardSize.decode(reader, reader.uint32())
+            );
+            break;
+
+          default:
+            reader.skipType(tag & 7);
+            break;
+        }
+      }
+
+      return message;
+    }
+
+    epoch: u32;
+    nextValidationTime: i64;
+    validationPeriod: u32;
+    godAddress: Uint8Array;
+    wordsSeed: Uint8Array;
+    lastSnapshot: u64;
+    epochBlock: u64;
+    feePerGas: Uint8Array;
+    vrfProposerThreshold: u64;
+    emptyBlocksBits: Uint8Array;
+    godAddressInvites: u32;
+    blocksCntWithoutCeremonialTxs: u32;
+    prevEpochBlocks: Array<u64>;
+    shardsNum: u32;
+    emptyBlocksByShards: Array<models.ProtoStateGlobal.EmptyBlocksByShards>;
+    shardSizes: Array<models.ProtoStateGlobal.ShardSize>;
+
+    constructor(
+      epoch: u32 = 0,
+      nextValidationTime: i64 = 0,
+      validationPeriod: u32 = 0,
+      godAddress: Uint8Array = new Uint8Array(0),
+      wordsSeed: Uint8Array = new Uint8Array(0),
+      lastSnapshot: u64 = 0,
+      epochBlock: u64 = 0,
+      feePerGas: Uint8Array = new Uint8Array(0),
+      vrfProposerThreshold: u64 = 0,
+      emptyBlocksBits: Uint8Array = new Uint8Array(0),
+      godAddressInvites: u32 = 0,
+      blocksCntWithoutCeremonialTxs: u32 = 0,
+      prevEpochBlocks: Array<u64> = [],
+      shardsNum: u32 = 0,
+      emptyBlocksByShards: Array<models.ProtoStateGlobal.EmptyBlocksByShards> = [],
+      shardSizes: Array<models.ProtoStateGlobal.ShardSize> = []
+    ) {
+      this.epoch = epoch;
+      this.nextValidationTime = nextValidationTime;
+      this.validationPeriod = validationPeriod;
+      this.godAddress = godAddress;
+      this.wordsSeed = wordsSeed;
+      this.lastSnapshot = lastSnapshot;
+      this.epochBlock = epochBlock;
+      this.feePerGas = feePerGas;
+      this.vrfProposerThreshold = vrfProposerThreshold;
+      this.emptyBlocksBits = emptyBlocksBits;
+      this.godAddressInvites = godAddressInvites;
+      this.blocksCntWithoutCeremonialTxs = blocksCntWithoutCeremonialTxs;
+      this.prevEpochBlocks = prevEpochBlocks;
+      this.shardsNum = shardsNum;
+      this.emptyBlocksByShards = emptyBlocksByShards;
+      this.shardSizes = shardSizes;
+    }
+  }
+
+  export namespace ProtoStateGlobal {
+    export class EmptyBlocksByShards {
+      static encode(message: EmptyBlocksByShards, writer: Writer): void {
+        writer.uint32(8);
+        writer.uint32(message.shardId);
+
+        const proposers = message.proposers;
+        if (proposers.length !== 0) {
+          for (let i = 0; i < proposers.length; ++i) {
+            writer.uint32(18);
+            writer.bytes(proposers[i]);
+          }
+        }
+      }
+
+      static decode(reader: Reader, length: i32): EmptyBlocksByShards {
+        const end: usize = length < 0 ? reader.end : reader.ptr + length;
+        const message = new EmptyBlocksByShards();
+
+        while (reader.ptr < end) {
+          const tag = reader.uint32();
+          switch (tag >>> 3) {
+            case 1:
+              message.shardId = reader.uint32();
+              break;
+
+            case 2:
+              message.proposers.push(reader.bytes());
+              break;
+
+            default:
+              reader.skipType(tag & 7);
+              break;
+          }
+        }
+
+        return message;
+      }
+
+      shardId: u32;
+      proposers: Array<Uint8Array>;
+
+      constructor(shardId: u32 = 0, proposers: Array<Uint8Array> = []) {
+        this.shardId = shardId;
+        this.proposers = proposers;
+      }
+    }
+
+    @unmanaged
+    export class ShardSize {
+      static encode(message: ShardSize, writer: Writer): void {
+        writer.uint32(8);
+        writer.uint32(message.shardId);
+
+        writer.uint32(16);
+        writer.uint32(message.size);
+      }
+
+      static decode(reader: Reader, length: i32): ShardSize {
+        const end: usize = length < 0 ? reader.end : reader.ptr + length;
+        const message = new ShardSize();
+
+        while (reader.ptr < end) {
+          const tag = reader.uint32();
+          switch (tag >>> 3) {
+            case 1:
+              message.shardId = reader.uint32();
+              break;
+
+            case 2:
+              message.size = reader.uint32();
+              break;
+
+            default:
+              reader.skipType(tag & 7);
+              break;
+          }
+        }
+
+        return message;
+      }
+
+      shardId: u32;
+      size: u32;
+
+      constructor(shardId: u32 = 0, size: u32 = 0) {
+        this.shardId = shardId;
+        this.size = size;
+      }
+    }
+  }
 }

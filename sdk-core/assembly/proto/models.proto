@@ -82,3 +82,34 @@ message ProtoBlockHeader {
     Proposed proposedHeader = 1;
     Empty emptyHeader = 2;
 }
+
+
+message ProtoStateGlobal {
+
+    message EmptyBlocksByShards {
+        uint32 shardId = 1;
+        repeated bytes proposers = 2;
+    }
+
+    message ShardSize {
+        uint32 shardId = 1;
+        uint32 size = 2;
+    }
+
+    uint32 epoch = 1;
+    int64 nextValidationTime = 2;
+    uint32 validationPeriod = 3;
+    bytes godAddress = 4;
+    bytes wordsSeed = 5;
+    uint64 lastSnapshot = 6;
+    uint64 epochBlock = 7;
+    bytes feePerGas = 8;
+    uint64 vrfProposerThreshold = 9;
+    bytes emptyBlocksBits = 10;
+    uint32 godAddressInvites = 11;
+    uint32 blocksCntWithoutCeremonialTxs = 12;
+    repeated uint64 prevEpochBlocks = 13;
+    uint32 shardsNum = 14;
+    repeated EmptyBlocksByShards emptyBlocksByShards = 15;
+    repeated ShardSize shardSizes = 16;
+}
