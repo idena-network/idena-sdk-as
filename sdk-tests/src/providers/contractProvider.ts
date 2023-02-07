@@ -40,6 +40,7 @@ export class ContractProvider extends BaseProvider {
     amount: string,
     maxFee: string,
     code: Buffer,
+    nonce: Buffer,
     args: ContractArgument[] = null
   ): Promise<JsonReceipt> {
     return await this.doRequest({
@@ -47,6 +48,7 @@ export class ContractProvider extends BaseProvider {
       params: [
         {
           code: toHexString(code),
+          nonce: toHexString(nonce),
           amount: amount,
           args: args,
           maxFee: maxFee,
