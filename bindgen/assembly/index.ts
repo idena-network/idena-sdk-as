@@ -593,7 +593,7 @@ function decodeBytes<T>(buf: Uint8Array): Result<T> {
   }
   if (isString<T>()){
      // @ts-ignore
-     return changetype<T>(util.bytesToString(buf));
+     return new Result(changetype<T>(util.bytesToString(buf)));
   }
     
   return Result.fail<T>(value);
@@ -675,7 +675,7 @@ class Result<T> {
   }
 
   static fail<T>(value : T) : Result<T> {
-    let r = new Result(value);
+    let r = new Result<T>(value);
     r.success = false;
     return r;
   }
