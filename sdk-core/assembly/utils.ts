@@ -177,7 +177,7 @@ export namespace util {
     }
 
     function isHexPrefixed(str: string): bool {
-      return str.slice(0, 2) === '0x';
+      return str.slice(0, 2) == '0x';
     }
 
     function stripHexPrefix(str: string): string {
