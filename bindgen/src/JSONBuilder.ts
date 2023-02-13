@@ -27,18 +27,30 @@ function numOfParameters(node: FunctionDeclaration): number {
 }
 
 function hasIdenaDecorator(stmt: Source): boolean {
-  return (
-    isEntry(stmt) ||
+  const res =
+    isUserFile(stmt) ||
     stmt.statements.some(
       (s) =>
         s instanceof DeclarationStatement &&
         utils.hasDecorator(s, IDENA_DECORATOR)
-    )
-  );
+    );
+  if (res) {
+    console.log(
+      `transformed file path=${stmt.normalizedPath} entry=${stmt.range.source.sourceKind}`
+    );
+  }
+  return res;
 }
 
 export function isEntry(source: Source | Node): boolean {
   return source.range.source.sourceKind == SourceKind.USER_ENTRY;
+}
+
+export function isUserFile(source: Source | Node): boolean {
+  return (
+    source.range.source.sourceKind == SourceKind.USER_ENTRY ||
+    source.range.source.sourceKind == SourceKind.USER
+  );
 }
 
 function isClass(type: Node): boolean {
@@ -91,7 +103,7 @@ function createPtrDecodeStatement(
 
 function createDecodeStatement(
   field: FieldDeclaration | ParameterNode,
-  setterPrefix = ""
+  setterPrefix = ''
 ): string {
   let T = toString(field.type!);
   let name = toString(field.name);
@@ -138,7 +150,7 @@ export class JSONBindingsBuilder extends BaseVisitor {
     let isExport = node.is(CommonFlags.EXPORT);
     let alreadyWrapped = this.wrappedFuncs.has(toString(node.name));
     let noInputOrOutput = numOfParameters(node) == 0 && returnsVoid(node);
-    let isIgnore  = utils.hasDecorator(node, IDENA_IGNORE_FUNC_DECORATOR);  
+    let isIgnore = utils.hasDecorator(node, IDENA_IGNORE_FUNC_DECORATOR);
     if (
       isIgnore ||
       !isExport ||
@@ -208,12 +220,14 @@ export class JSONBindingsBuilder extends BaseVisitor {
       })
       .join(', ');
 
-    var wrappedReturnType = "void";
+    var wrappedReturnType = 'void';
     if (toString(returnType) !== 'void') {
-      wrappedReturnType  = "usize";
+      wrappedReturnType = 'usize';
     }
 
-    this.sb.push(`function __wrapper_${name}(${ptrParamsSb}): ${wrappedReturnType} {`);    
+    this.sb.push(
+      `function __wrapper_${name}(${ptrParamsSb}): ${wrappedReturnType} {`
+    );
     if (toString(returnType) !== 'void') {
       this.sb.push(`  let result: ${toString(returnType)} = ${name}(`);
     } else {
@@ -262,28 +276,28 @@ ${this.camelCaseToSnakeCaseExport(name)}
 
     let sourceText = source.statements.map((stmt) => {
       let str;
-      if (
-        isClass(stmt) &&
-        utils.hasDecorator(<ClassDeclaration>stmt, IDENA_DECORATOR)
-      ) {
+
+      if (isClass(stmt)) {
         let _class = <ClassDeclaration>stmt;
-        let fields = _class.members
-          .filter(isField)
-          .map((field: FieldDeclaration) => field);
-        if (fields.some((field) => field.type == null)) {
-          throw new Error('All Fields must have explicit type declaration.');
-        }
-        fields.forEach((field) => {
-          if (field.initializer == null) {
-            field.initializer = SimpleParser.parseExpression(
-              `defaultValue<${toString(field.type!)}>())`
-            );
+        let isIgnore = utils.hasDecorator(_class, IDENA_IGNORE_FUNC_DECORATOR);
+        if (!isIgnore) {
+          let fields = _class.members
+            .filter(isField)
+            .map((field: FieldDeclaration) => field);
+          if (fields.some((field) => field.type == null)) {
+            throw new Error('All Fields must have explicit type declaration.');
           }
-        });
-        str = toString(stmt);
-        str = str.slice(0, str.lastIndexOf('}'));
-        let className = this.typeName(_class);
-        str += `
+          fields.forEach((field) => {
+            if (field.initializer == null) {
+              field.initializer = SimpleParser.parseExpression(
+                `defaultValue<${toString(field.type!)}>())`
+              );
+            }
+          });
+          str = toString(stmt);
+          str = str.slice(0, str.lastIndexOf('}'));
+          let className = this.typeName(_class);
+          str += `
   decode<_V = Uint8Array>(buf: _V): ${className} {
     let json: JSON.Obj;
     if (buf instanceof Uint8Array) {
@@ -323,6 +337,9 @@ ${this.camelCaseToSnakeCaseExport(name)}
     return this._encode().toString();
   }
 }`;
+        } else {
+          str = toString(stmt);
+        }
       } else {
         str = toString(stmt);
       }

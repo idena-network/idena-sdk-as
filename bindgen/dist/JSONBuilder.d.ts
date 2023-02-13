@@ -1,6 +1,7 @@
 import { Node, FunctionDeclaration, Source, ClassDeclaration } from 'visitor-as/as';
 import { BaseVisitor } from 'visitor-as';
 export declare function isEntry(source: Source | Node): boolean;
+export declare function isUserFile(source: Source | Node): boolean;
 export declare class JSONBindingsBuilder extends BaseVisitor {
     private sb;
     private exportedClasses;

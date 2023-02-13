@@ -14,5 +14,4 @@
     "lib": "./assembly/json.lib.ts"
   },
   "entries": ["./assembly/bindgen.ts"]
-  
 }

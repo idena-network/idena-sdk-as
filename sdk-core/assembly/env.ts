@@ -127,4 +127,13 @@ export namespace env {
 
     @external("env", "global_state")
     export declare function globalState() : usize;
+
+    @external("env", "gas_limit")
+    export declare function gasLimit() : u64;
+
+    @external("env", "gas_left")
+    export declare function gasLeft() : u64;
+
+    @external("env", "balance")
+    export declare function balance() : usize;
 }

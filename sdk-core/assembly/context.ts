@@ -1,4 +1,3 @@
-
 import {Bytes, env, util, Balance, Address} from 'idena-sdk-core';
 
 export namespace Context {
@@ -34,6 +33,10 @@ export namespace Context {
     return Address.fromBytes(util.ptrToBytes(env.contract()));
   }
 
+  export function contractBalance(): Balance {
+    return Balance.fromBytes(util.ptrToBytes(env.balance()));
+  }
+
   export function contractCodeHash(): Bytes {
     return util.ptrToBytes(env.codeHash());
   }
@@ -41,11 +44,19 @@ export namespace Context {
     return util.ptrToBytes(env.code());
   }
 
-  export function epoch() : u16 {
+  export function epoch(): u16 {
     return env.epoch();
   }
 
   export function payAmount(): Balance {
     return Balance.fromBytes(util.ptrToBytes(env.payAmount()));
+  }
+
+  export function gasLimit(): u64 {
+    return env.gasLimit();
+  }
+
+  export function gasLeft(): u64 {
+    return env.gasLeft();
   }
 }
