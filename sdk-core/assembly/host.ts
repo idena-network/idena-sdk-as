@@ -192,4 +192,14 @@ export namespace Host {
       models.ProtoStateGlobal.decode
     );
   }
+
+  export function ecrecover(data: Uint8Array, sig: Uint8Array): Bytes {
+    return util.ptrToBytes(
+      env.ecrecover(util.bytesToPtr(data), util.bytesToPtr(sig))
+    );
+  }
+
+  export function burn(amount: Balance): void {
+    env.burn(util.bytesToPtr(amount.toBytes()));
+  }
 }

@@ -136,4 +136,10 @@ export namespace env {
 
     @external("env", "balance")
     export declare function balance() : usize;
+
+    @external("env", "ecrecover")
+    export declare function ecrecover(data : usize, sig : usize) : usize;
+
+    @external("env", "burn")
+    export declare function burn(amount : usize) : void;
 }
