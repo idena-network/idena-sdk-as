@@ -13,7 +13,7 @@ import {isEntry} from './JSONBuilder';
 import {SimpleParser} from './utils';
 
 const toString = utils.toString;
-const privateDecorator = 'contractPrivate';
+const privateDecorator = 'privateMethod';
 
 export class ClassExporter extends ClassDecorator {
   sb: string[] = [];

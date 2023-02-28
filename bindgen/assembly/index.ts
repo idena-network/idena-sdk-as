@@ -1,5 +1,5 @@
 import { JSONEncoder as _JSONEncoder, JSON } from "idena-assemblyscript-json";
-import { Bytes, env, u256, storage, util, u128, allocate, Address, base64, debug, Balance} from 'idena-sdk-core';
+import { Bytes, env, u256, storage, util, u128, allocate, Address, base64, debug, Balance, Context} from 'idena-sdk-core';
 // Runtime functions
 // tslint:disable: no-unsafe-any
 /* eslint-disable  @typescript-eslint/no-unused-vars */
@@ -682,10 +682,9 @@ class Result<T> {
 }
 
 
-/*
+
 @global
 function __assertPrivate(): void {
-  let contractName = Context.contractName;
-  assert(contractName == Context.predecessor, `Only ${contractName} can call this method.`);
+  let addr = Context.contractAddress();
+  assert(addr == Context.caller(), `Only ${addr.toHex()} can call this method.`);
 }
-*/

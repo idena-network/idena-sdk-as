@@ -63,8 +63,8 @@ declare interface Uint8Array {
   /**
    * 
    * Asserts that a contract method is private, e.i.
-   * Context.contractName == Context.predecessor
+   * Context.contractAddress() == Context.caller()
    */
-  declare function contractPrivate(): (target: any,
+  declare function privateMethod(): (target: any,
   propertyKey: string,
   descriptor: any) => void;
